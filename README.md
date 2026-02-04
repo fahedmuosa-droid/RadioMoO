@@ -1,4 +1,6 @@
-
+[deepseek_html_20260117_dc7b69.html](https://github.com/user-attachments/files/25081705/deepseek_html_20260117_dc7b69.html)
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
