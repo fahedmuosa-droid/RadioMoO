@@ -1,5 +1,5 @@
 
-<F.Mousa>
+<F.M>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -128,7 +128,7 @@
             transform: translateX(-5px);
         }
         
-        /* منطقة الفنان/الفيديو */
+        /* منطقة المؤثرات البصرية والفيديو */
         .media-area {
             flex-grow: 1;
             display: flex;
@@ -150,7 +150,7 @@
             background-color: transparent;
         }
         
-        /* حاوية المؤثرات البصرية فقط (بدون صورة فنان) */
+        /* حاوية المؤثرات البصرية فقط */
         .visualizer-container {
             width: 280px;
             height: 280px;
@@ -592,7 +592,7 @@
         .content-item {
             display: inline-block;
             width: 80px;
-            height: 100px; /* زيادة الارتفاع لاستيعاب الصورة */
+            height: 100px;
             margin-left: 15px;
             border-radius: 12px;
             background-color: rgba(40, 40, 40, 0.9);
@@ -681,6 +681,33 @@
         @keyframes fadeInOut {
             0%, 100% { opacity: 0; }
             10%, 90% { opacity: 1; }
+        }
+        
+        /* مؤشر تحميل الفيديو */
+        .video-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1002;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 300px;
+        }
+        
+        .video-loading i {
+            font-size: 3rem;
+            color: #4169e1;
+            margin-bottom: 15px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .video-loading-text {
+            font-size: 1.1rem;
+            color: #fff;
         }
         
         /* نافذة الإعدادات */
@@ -956,52 +983,6 @@
             height: env(safe-area-inset-bottom);
             width: 100%;
         }
-        
-        /* مشغل فيديو متوافق مع App Inventor */
-        .compatible-video-player {
-            width: 100%;
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            background: rgba(20, 20, 20, 0.9);
-            border-radius: 15px;
-            text-align: center;
-            display: none;
-        }
-        
-        .video-status {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            color: #aaa;
-        }
-        
-        .appinventor-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .appinventor-btn {
-            padding: 12px 20px;
-            background: linear-gradient(to right, #4169e1, #8a2be2);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-        
-        .appinventor-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(65, 105, 225, 0.4);
-        }
-        
-        .appinventor-btn.secondary {
-            background: rgba(60, 60, 60, 0.8);
-        }
     </style>
 </head>
 <body>
@@ -1050,26 +1031,16 @@
                 <i class="fas fa-expand"></i> ملء الشاشة
             </div>
             
+            <!-- مؤشر تحميل الفيديو -->
+            <div class="video-loading" id="videoLoading" style="display: none;">
+                <i class="fas fa-sync fa-spin"></i>
+                <div class="video-loading-text" id="videoLoadingText">جاري تحميل الفيديو...</div>
+            </div>
+            
             <!-- معلومات الفنان -->
             <div class="artist-info">
                 <div class="artist-name" id="artistName">أحلام</div>
                 <div class="song-title" id="songTitle">أغنية مختارة</div>
-            </div>
-            
-            <!-- مشغل فيديو متوافق مع App Inventor -->
-            <div class="compatible-video-player" id="compatibleVideoPlayer">
-                <div class="video-status" id="videoStatus">جاهز للتشغيل</div>
-                <div class="appinventor-controls">
-                    <button class="appinventor-btn" onclick="playInExternalPlayer()">
-                        <i class="fas fa-external-link-alt"></i> فتح بمشغل خارجي
-                    </button>
-                    <button class="appinventor-btn secondary" onclick="downloadVideo()">
-                        <i class="fas fa-download"></i> تحميل الفيديو
-                    </button>
-                </div>
-                <p style="margin-top: 15px; font-size: 0.9rem; color: #888;">
-                    في حالة عدم عمل الفيديو، استخدم الزر لفتحه بمشغل خارجي
-                </p>
             </div>
         </div>
         
@@ -1257,10 +1228,10 @@
                 </div>
                 
                 <div class="settings-option">
-                    <div class="option-label">وضع App Inventor</div>
+                    <div class="option-label">التشغيل الذكي</div>
                     <div class="option-control">
                         <label class="toggle-switch">
-                            <input type="checkbox" id="appInventorModeToggle">
+                            <input type="checkbox" id="smartPlayToggle" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -1309,6 +1280,9 @@
     
     <!-- عنصر صوتي مخفي -->
     <audio id="audioPlayer" style="display: none;"></audio>
+    
+    <!-- iframe مخفي للفيديو المتوافق -->
+    <iframe id="externalVideoFrame" style="display: none;"></iframe>
     
     <script>
         // البيانات الأولية مع روابط صوت حقيقية للراديو (20 محطة)
@@ -1386,13 +1360,14 @@
         // حالة التطبيق
         let isPlaying = false;
         let currentContentId = 1;
-        let currentContentType = "radio"; // radio, music, video
+        let currentContentType = "radio";
         let currentTime = 0;
         let duration = 0;
         let progressInterval = null;
         let fullscreenTimeout = null;
         let isFullscreen = false;
-        let isAppInventorMode = false;
+        let isSmartPlay = true;
+        let currentVideoUrl = "";
         
         // عناصر DOM
         const settingsBtn = document.getElementById('settingsBtn');
@@ -1403,8 +1378,6 @@
         const playIcon = document.getElementById('playIcon');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const repeatBtn = document.getElementById('repeatBtn');
-        const shuffleBtn = document.getElementById('shuffleBtn');
         const progressBar = document.getElementById('progressBar');
         const progress = document.getElementById('progress');
         const currentTimeElement = document.getElementById('currentTime');
@@ -1422,8 +1395,9 @@
         const mediaArea = document.getElementById('mediaArea');
         const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
         const fullscreenIndicator = document.getElementById('fullscreenIndicator');
-        const compatibleVideoPlayer = document.getElementById('compatibleVideoPlayer');
-        const videoStatus = document.getElementById('videoStatus');
+        const videoLoading = document.getElementById('videoLoading');
+        const videoLoadingText = document.getElementById('videoLoadingText');
+        const externalVideoFrame = document.getElementById('externalVideoFrame');
         
         // أزرار اختيار النوع
         const radioTypeBtn = document.getElementById('radioTypeBtn');
@@ -1568,15 +1542,10 @@
                     item = videos.find(v => v.id === contentId);
                     artistName.textContent = item.name;
                     songTitle.textContent = item.title;
+                    currentVideoUrl = item.url;
                     
-                    // التحقق من وضع App Inventor
-                    if (isAppInventorMode) {
-                        setupAppInventorVideoPlayer(item.url);
-                    } else {
-                        // إعداد واجهة الفيديو العادية
-                        setupVideoInterface();
-                        setupVideoPlayer(item.url, item.duration);
-                    }
+                    // إعداد واجهة الفيديو الذكية
+                    setupSmartVideoPlayer(item.url, item.duration);
                     break;
             }
             
@@ -1586,11 +1555,14 @@
             }, 1000);
         }
         
-        // إعداد واجهة الفيديو
-        function setupVideoInterface() {
-            // إخفاء المؤثرات وإظهار الفيديو
+        // إعداد مشغل الفيديو الذكي (يحاول تلقائياً)
+        function setupSmartVideoPlayer(url, videoDuration) {
+            // إظهار مؤشر التحميل
+            videoLoading.style.display = 'block';
+            videoLoadingText.textContent = 'جاري تحميل الفيديو...';
+            
+            // إخفاء المؤثرات البصرية
             visualizerContainer.style.display = 'none';
-            videoContainer.style.display = 'block';
             
             // إضافة حالة الفيديو النشط
             mediaArea.classList.add('video-active');
@@ -1598,70 +1570,73 @@
             // إظهار زر الرجوع
             backBtn.style.display = 'flex';
             
-            // إخفاء مشغل App Inventor
-            compatibleVideoPlayer.style.display = 'none';
-            
-            // إذا كان هناك وقت تشغيل سابق، أزله
-            if (fullscreenTimeout) {
-                clearTimeout(fullscreenTimeout);
-            }
-        }
-        
-        // إعداد مشغل الفيديو الخاص بـ App Inventor
-        function setupAppInventorVideoPlayer(url) {
-            // إخفاء العناصر الأصلية
-            visualizerContainer.style.display = 'none';
+            // إخفاء مشغل الفيديو العادي مؤقتاً
             videoContainer.style.display = 'none';
             
-            // إظهار مشغل App Inventor
-            compatibleVideoPlayer.style.display = 'block';
-            videoStatus.textContent = 'جاهز للتشغيل';
-            
-            // إضافة حالة الفيديو النشط
-            mediaArea.classList.add('video-active');
-            
-            // إظهار زر الرجوع
-            backBtn.style.display = 'flex';
-            
-            // تحديث رابط الفيديو
-            compatibleVideoPlayer.dataset.videoUrl = url;
-            
-            // عرض اسم الفيديو
-            const item = videos.find(v => v.id === currentContentId);
-            if (item) {
-                videoStatus.textContent = `جاري تحميل: ${item.name}`;
-            }
+            // محاولة تشغيل الفيديو بطرق مختلفة
+            attemptVideoPlayback(url, videoDuration);
         }
         
-        // تشغيل الفيديو في مشغل خارجي
-        function playInExternalPlayer() {
-            const videoUrl = compatibleVideoPlayer.dataset.videoUrl;
-            if (videoUrl) {
-                // محاولة فتح في نافذة جديدة
-                window.open(videoUrl, '_blank');
-                
-                // أو استخدام iframe كبديل
-                videoStatus.textContent = 'جاري فتح المشغل الخارجي...';
-                
-                // إرسال إلى App Inventor إذا كان موجوداً
-                if (typeof Android !== 'undefined' && Android.openVideo) {
-                    Android.openVideo(videoUrl);
-                }
+        // محاولة تشغيل الفيديو بطرق مختلفة
+        function attemptVideoPlayback(url, videoDuration) {
+            if (!url) {
+                videoLoadingText.textContent = 'لا يوجد رابط فيديو متاح';
+                setTimeout(() => {
+                    videoLoading.style.display = 'none';
+                }, 2000);
+                return;
             }
+            
+            // المحاولة 1: استخدام مشغل HTML5 العادي
+            videoPlayer.src = url;
+            videoPlayer.load();
+            
+            // محاولة التشغيل مباشرة
+            videoPlayer.play().then(() => {
+                // نجاح - استخدم مشغل HTML5
+                videoLoading.style.display = 'none';
+                videoContainer.style.display = 'block';
+                isPlaying = true;
+                playIcon.className = 'fas fa-pause';
+                startVisualizer();
+                startProgressForVideo();
+                
+                videoLoadingText.textContent = 'تم تحميل الفيديو بنجاح';
+                
+            }).catch(error => {
+                console.log("خطأ في تشغيل الفيديو العادي:", error);
+                
+                // المحاولة 2: فتح في iframe
+                videoLoadingText.textContent = 'جرب طريقة بديلة...';
+                
+                setTimeout(() => {
+                    openVideoInFrame(url);
+                }, 1000);
+            });
         }
         
-        // تحميل الفيديو
-        function downloadVideo() {
-            const videoUrl = compatibleVideoPlayer.dataset.videoUrl;
-            if (videoUrl) {
-                // إنشاء رابط تحميل
-                const link = document.createElement('a');
-                link.href = videoUrl;
-                link.download = 'video.mp4';
-                link.click();
-                
-                videoStatus.textContent = 'جاري التحميل...';
-            }
+        // فتح الفيديو في iframe
+        function openVideoInFrame(url) {
+            videoLoadingText.textContent = 'جاري فتح الفيديو...';
+            
+            // إنشاء iframe جديد
+            const newFrame = document.createElement('iframe');
+            newFrame.id = 'videoFrame';
+            newFrame.src = url;
+            newFrame.style.width = '100%';
+            newFrame.style.height = '65%';
+            newFrame.style.border = 'none';
+            newFrame.style.borderRadius = '10px';
+            newFrame.style.display = 'block';
+            
+            // إضافة إلى منطقة الوسائط
+            mediaArea.appendChild(newFrame);
+            
+            // إخفاء مؤشر التحميل بعد ثانيتين
+            setTimeout(() => {
+                videoLoading.style.display = 'none';
+                videoLoadingText.textContent = 'تم فتح الفيديو';
+            }, 2000);
         }
         
         // الخروج من وضع ملء الشاشة
@@ -1684,15 +1659,6 @@
             videoPlayer.removeEventListener('click', toggleFullscreen);
         }
         
-        // تبديل وضع ملء الشاشة
-        function toggleFullscreen() {
-            if (isFullscreen) {
-                exitFullscreenMode();
-            } else {
-                enterFullscreenMode();
-            }
-        }
-        
         // العودة إلى الصفحة الرئيسية
         function goBackToHome() {
             if (currentContentType === 'video') {
@@ -1704,12 +1670,16 @@
                 mediaArea.classList.remove('fullscreen-mode');
                 exitFullscreenBtn.style.display = 'none';
                 
+                // إزالة iframe إذا كان موجوداً
+                const videoFrame = document.getElementById('videoFrame');
+                if (videoFrame) {
+                    videoFrame.remove();
+                }
+                
                 // إعادة إظهار المؤثرات البصرية
                 visualizerContainer.style.display = 'flex';
                 videoContainer.style.display = 'none';
-                
-                // إخفاء مشغل App Inventor
-                compatibleVideoPlayer.style.display = 'none';
+                videoLoading.style.display = 'none';
                 
                 // إخفاء زر الرجوع
                 backBtn.style.display = 'none';
@@ -1795,14 +1765,20 @@
             // إخفاء زر الرجوع
             backBtn.style.display = 'none';
             
+            // إخفاء مؤشر تحميل الفيديو
+            videoLoading.style.display = 'none';
+            
+            // إزالة iframe إذا كان موجوداً
+            const videoFrame = document.getElementById('videoFrame');
+            if (videoFrame) {
+                videoFrame.remove();
+            }
+            
             // إلغاء وقت ملء الشاشة
             if (fullscreenTimeout) {
                 clearTimeout(fullscreenTimeout);
                 fullscreenTimeout = null;
             }
-            
-            // إخفاء مشغل App Inventor
-            compatibleVideoPlayer.style.display = 'none';
             
             if (url) {
                 audioPlayer.src = url;
@@ -1850,14 +1826,20 @@
             // إخفاء زر الرجوع
             backBtn.style.display = 'none';
             
+            // إخفاء مؤشر تحميل الفيديو
+            videoLoading.style.display = 'none';
+            
+            // إزالة iframe إذا كان موجوداً
+            const videoFrame = document.getElementById('videoFrame');
+            if (videoFrame) {
+                videoFrame.remove();
+            }
+            
             // إلغاء وقت ملء الشاشة
             if (fullscreenTimeout) {
                 clearTimeout(fullscreenTimeout);
                 fullscreenTimeout = null;
             }
-            
-            // إخفاء مشغل App Inventor
-            compatibleVideoPlayer.style.display = 'none';
             
             if (url) {
                 audioPlayer.src = url;
@@ -1888,32 +1870,6 @@
                 startVisualizer();
                 startProgress();
             }
-        }
-        
-        // إعداد مشغل الفيديو
-        function setupVideoPlayer(url, videoDuration) {
-            // إيقاف أي تشغيل سابق
-            stopAllPlayers();
-            
-            videoPlayer.src = url || '';
-            videoPlayer.load();
-            
-            // تشغيل الفيديو مباشرة
-            videoPlayer.play().then(() => {
-                isPlaying = true;
-                playIcon.className = 'fas fa-pause';
-                startVisualizer();
-                startProgressForVideo();
-            }).catch(error => {
-                console.log("خطأ في تشغيل الفيديو:", error);
-                
-                // إذا فشل التشغيل، تحويل إلى وضع App Inventor
-                videoStatus.textContent = 'فشل تشغيل الفيديو. جارٍ التبديل إلى الوضع المتوافق...';
-                setTimeout(() => {
-                    isAppInventorMode = true;
-                    setupAppInventorVideoPlayer(url);
-                }, 1500);
-            });
         }
         
         // إيقاف جميع المشغلات
@@ -2029,7 +1985,9 @@
                         startProgress();
                         break;
                     case 'video':
-                        if (!isAppInventorMode) {
+                        if (document.getElementById('videoFrame')) {
+                            // لا يمكن التحكم في iframe
+                        } else {
                             videoPlayer.play().catch(e => console.log("خطأ في تشغيل الفيديو:", e));
                             startProgressForVideo();
                         }
@@ -2048,7 +2006,7 @@
                         audioPlayer.pause();
                         break;
                     case 'video':
-                        if (!isAppInventorMode) {
+                        if (!document.getElementById('videoFrame')) {
                             videoPlayer.pause();
                         }
                         break;
@@ -2131,17 +2089,9 @@
             }
         }
         
-        // تمكين/تعطيل وضع App Inventor
-        function toggleAppInventorMode(enable) {
-            isAppInventorMode = enable;
-            
-            // إذا كنا في وضع الفيديو وتم تفعيل وضع App Inventor
-            if (enable && currentContentType === 'video') {
-                const item = videos.find(v => v.id === currentContentId);
-                if (item) {
-                    setupAppInventorVideoPlayer(item.url);
-                }
-            }
+        // تمكين/تعطيل التشغيل الذكي
+        function toggleSmartPlay(enable) {
+            isSmartPlay = enable;
         }
         
         // التعامل مع تغيير شريط التقدم
@@ -2152,7 +2102,7 @@
             const percent = clickPosition / width;
             
             // تحديث حسب نوع المحتوى
-            if (currentContentType === 'video' && !isAppInventorMode) {
+            if (currentContentType === 'video' && !document.getElementById('videoFrame')) {
                 if (videoPlayer.duration) {
                     videoPlayer.currentTime = percent * videoPlayer.duration;
                     currentTime = videoPlayer.currentTime;
@@ -2246,10 +2196,10 @@
                 videoPlayer.volume = volume;
             });
             
-            // التحكم في وضع App Inventor
-            const appInventorToggle = document.getElementById('appInventorModeToggle');
-            appInventorToggle.addEventListener('change', function() {
-                toggleAppInventorMode(this.checked);
+            // التحكم في التشغيل الذكي
+            const smartPlayToggle = document.getElementById('smartPlayToggle');
+            smartPlayToggle.addEventListener('change', function() {
+                toggleSmartPlay(this.checked);
             });
             
             // إغلاق الإعدادات بالنقر خارجها
@@ -2262,9 +2212,9 @@
             // كشف نظام التشغيل تلقائياً
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             if (/android/i.test(userAgent)) {
-                // تفعيل وضع App Inventor تلقائياً للأندرويد
-                isAppInventorMode = true;
-                appInventorToggle.checked = true;
+                // تفعيل التشغيل الذكي تلقائياً للأندرويد
+                isSmartPlay = true;
+                smartPlayToggle.checked = true;
             }
         }
         
