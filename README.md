@@ -1,5 +1,5 @@
 
-<Mousa Fahed>
+<F.Mousa>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -150,7 +150,8 @@
             background-color: transparent;
         }
         
-        .artist-image-container {
+        /* حاوية المؤثرات البصرية فقط (بدون صورة فنان) */
+        .visualizer-container {
             width: 280px;
             height: 280px;
             border-radius: 50%;
@@ -160,18 +161,15 @@
             margin-bottom: 25px;
             border: 3px solid #333;
             transition: all 0.5s ease;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 70%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        /* حالة الفيديو النشط - إخفاء صورة الفنان */
-        .media-area.video-active .artist-image-container {
+        /* حالة الفيديو النشط - إخفاء المؤثرات */
+        .media-area.video-active .visualizer-container {
             display: none;
-        }
-        
-        #artistImage {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
         }
         
         .visualizer {
@@ -205,6 +203,59 @@
         @keyframes soundWave {
             0%, 100% { height: 10px; }
             50% { height: 50px; }
+        }
+        
+        /* مؤثرات إضافية - دوائر متحركة */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 3s infinite ease-in-out;
+        }
+        
+        .circle-1 {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #4169e1;
+            animation-delay: 0s;
+        }
+        
+        .circle-2 {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #8a2be2;
+            animation-delay: 0.5s;
+        }
+        
+        .circle-3 {
+            width: 200px;
+            height: 200px;
+            border: 2px solid #4a00e0;
+            animation-delay: 1s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+        }
+        
+        /* نقاط متحركة */
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            animation: float 4s infinite linear;
+            opacity: 0.5;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            25% { opacity: 0.7; }
+            50% { transform: translateY(-20px) translateX(10px); opacity: 0.5; }
+            75% { opacity: 0.3; }
+            100% { transform: translateY(0) translateX(20px); opacity: 0; }
         }
         
         .video-container {
@@ -828,7 +879,7 @@
         
         /* تصميم متجاوب */
         @media (max-width: 480px) {
-            .artist-image-container {
+            .visualizer-container {
                 width: 240px;
                 height: 240px;
             }
@@ -871,7 +922,7 @@
         }
         
         @media (max-height: 700px) {
-            .artist-image-container {
+            .visualizer-container {
                 width: 200px;
                 height: 200px;
                 margin-bottom: 15px;
@@ -905,6 +956,52 @@
             height: env(safe-area-inset-bottom);
             width: 100%;
         }
+        
+        /* مشغل فيديو متوافق مع App Inventor */
+        .compatible-video-player {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .video-status {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #aaa;
+        }
+        
+        .appinventor-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .appinventor-btn {
+            padding: 12px 20px;
+            background: linear-gradient(to right, #4169e1, #8a2be2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .appinventor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 105, 225, 0.4);
+        }
+        
+        .appinventor-btn.secondary {
+            background: rgba(60, 60, 60, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -925,15 +1022,14 @@
             </div>
         </div>
         
-        <!-- منطقة الفنان/الفيديو -->
+        <!-- منطقة المؤثرات البصرية والفيديو -->
         <div class="media-area" id="mediaArea">
-            <div class="artist-image-container">
-                <img id="artistImage" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="صورة الفنان">
-                
-                <!-- مؤثرات صوتية -->
+            <!-- حاوية المؤثرات البصرية فقط -->
+            <div class="visualizer-container" id="visualizerContainer">
                 <div class="visualizer" id="visualizer">
                     <!-- سيتم إنشاء الأشرطة بواسطة JavaScript -->
                 </div>
+                <!-- سيتم إنشاء الدوائر والنقاط بواسطة JavaScript -->
             </div>
             
             <!-- مشغل الفيديو (مخفي بشكل افتراضي) -->
@@ -958,6 +1054,22 @@
             <div class="artist-info">
                 <div class="artist-name" id="artistName">أحلام</div>
                 <div class="song-title" id="songTitle">أغنية مختارة</div>
+            </div>
+            
+            <!-- مشغل فيديو متوافق مع App Inventor -->
+            <div class="compatible-video-player" id="compatibleVideoPlayer">
+                <div class="video-status" id="videoStatus">جاهز للتشغيل</div>
+                <div class="appinventor-controls">
+                    <button class="appinventor-btn" onclick="playInExternalPlayer()">
+                        <i class="fas fa-external-link-alt"></i> فتح بمشغل خارجي
+                    </button>
+                    <button class="appinventor-btn secondary" onclick="downloadVideo()">
+                        <i class="fas fa-download"></i> تحميل الفيديو
+                    </button>
+                </div>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #888;">
+                    في حالة عدم عمل الفيديو، استخدم الزر لفتحه بمشغل خارجي
+                </p>
             </div>
         </div>
         
@@ -1081,34 +1193,38 @@
                 </div>
             </div>
             
-            <!-- إعدادات الصورة -->
+            <!-- إعدادات المؤثرات البصرية -->
             <div class="settings-section">
                 <div class="section-title">
-                    <i class="fas fa-image"></i>
-                    <span>إعدادات الصورة</span>
+                    <i class="fas fa-magic"></i>
+                    <span>المؤثرات البصرية</span>
                 </div>
                 
                 <div class="settings-option">
-                    <div class="option-label">السطوع</div>
-                    <div class="option-control">
-                        <input type="range" min="0" max="100" value="80" class="volume-slider" id="brightnessSlider">
-                    </div>
-                </div>
-                
-                <div class="settings-option">
-                    <div class="option-label">التكبير</div>
-                    <div class="option-control">
-                        <input type="range" min="100" max="200" value="100" class="volume-slider" id="zoomSlider">
-                    </div>
-                </div>
-                
-                <div class="settings-option">
-                    <div class="option-label">مؤثرات الصورة</div>
+                    <div class="option-label">تفعيل المؤثرات</div>
                     <div class="option-control">
                         <label class="toggle-switch">
                             <input type="checkbox" id="visualEffectsToggle" checked>
                             <span class="toggle-slider"></span>
                         </label>
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">شدة المؤثرات</div>
+                    <div class="option-control">
+                        <input type="range" min="1" max="10" value="5" class="volume-slider" id="effectsIntensitySlider">
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">ألوان المؤثرات</div>
+                    <div class="option-control">
+                        <select id="effectsColorSelect" style="background: #333; color: white; padding: 5px; border-radius: 5px;">
+                            <option value="blue">أزرق</option>
+                            <option value="purple">بنفسجي</option>
+                            <option value="rainbow">قوس قزح</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -1141,10 +1257,10 @@
                 </div>
                 
                 <div class="settings-option">
-                    <div class="option-label">إظهار الكلمات</div>
+                    <div class="option-label">وضع App Inventor</div>
                     <div class="option-control">
                         <label class="toggle-switch">
-                            <input type="checkbox" id="lyricsToggle">
+                            <input type="checkbox" id="appInventorModeToggle">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -1243,28 +1359,28 @@
             { id: 20, name: "نوال الزغبي", title: "أغنية 20", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", duration: 190 }
         ];
         
-        // بيانات الفيديو (20 فيديو)
+        // بيانات الفيديو (20 فيديو) - إضافة روابط حقيقية
         let videos = [
             { id: 1, name: "فيديو قصير", title: "افلام كرتون", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", duration: 180 },
             { id: 2, name: "فيديو 2", title: "كرتون", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", duration: 210 },
-            { id: 3, name: "فيديو 3", title: "حفلات مباشرة", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg", url: "http://gifted-satoshi.192-185-7-210.plesk.page.192-185-7-210.hgws27.hgwin.temp.domains/api/ProveAttachmentApi/open-prove-attachment/765b0ad0-20c5-4a99-f798-08dcef7f61b1", duration: 195 },
-            { id: 4, name: "فيديو 4", title: "أغاني مصورة", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 240 },
-            { id: 5, name: "فيديو 5", title: "عروض موسيقية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 185 },
-            { id: 6, name: "فيديو 6", title: "مقاطع ترفيهية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 220 },
-            { id: 7, name: "فيديو 7", title: "برامج موسيقية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 190 },
-            { id: 8, name: "فيديو 8", title: "عروض راقصة", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 205 },
-            { id: 9, name: "فيديو 9", title: "حفلات غنائية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 215 },
-            { id: 10, name: "فيديو 10", title: "مقاطع تعليمية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 195 },
-            { id: 11, name: "فيديو 11", title: "حفلات حية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 200 },
-            { id: 12, name: "فيديو 12", title: "عروض فنية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 185 },
-            { id: 13, name: "فيديو 13", title: "مقاطع تاريخية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 220 },
-            { id: 14, name: "فيديو 14", title: "عروض مسرحية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 195 },
-            { id: 15, name: "فيديو 15", title: "حفلات عالمية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 210 },
-            { id: 16, name: "فيديو 16", title: "مقاطع كوميدية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 180 },
-            { id: 17, name: "فيديو 17", title: "عروض سحرية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 195 },
-            { id: 18, name: "فيديو 18", title: "حفلات أوركسترا", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 220 },
-            { id: 19, name: "فيديو 19", title: "مقاطع وثائقية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 240 },
-            { id: 20, name: "فيديو 20", title: "عروض ضوئية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 190 }
+            { id: 3, name: "فيديو 3", title: "حفلات مباشرة", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", duration: 195 },
+            { id: 4, name: "فيديو 4", title: "أغاني مصورة", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", duration: 240 },
+            { id: 5, name: "فيديو 5", title: "عروض موسيقية", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", duration: 185 },
+            { id: 6, name: "فيديو 6", title: "مقاطع ترفيهية", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", duration: 220 },
+            { id: 7, name: "فيديو 7", title: "برامج موسيقية", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerMeltdowns.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", duration: 190 },
+            { id: 8, name: "فيديو 8", title: "عروض راقصة", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", duration: 205 },
+            { id: 9, name: "فيديو 9", title: "حفلات غنائية", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4", duration: 215 },
+            { id: 10, name: "فيديو 10", title: "مقاطع تعليمية", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", duration: 195 },
+            { id: 11, name: "فيديو 11", title: "حفلات حية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4", duration: 200 },
+            { id: 12, name: "فيديو 12", title: "عروض فنية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://sample-videos.com/video123/mp4/480/big_buck_bunny_480p_1mb.mp4", duration: 185 },
+            { id: 13, name: "فيديو 13", title: "مقاطع تاريخية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", duration: 220 },
+            { id: 14, name: "فيديو 14", title: "عروض مسرحية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", duration: 195 },
+            { id: 15, name: "فيديو 15", title: "حفلات عالمية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", duration: 210 },
+            { id: 16, name: "فيديو 16", title: "مقاطع كوميدية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", duration: 180 },
+            { id: 17, name: "فيديو 17", title: "عروض سحرية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", duration: 195 },
+            { id: 18, name: "فيديو 18", title: "حفلات أوركسترا", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", duration: 220 },
+            { id: 19, name: "فيديو 19", title: "مقاطع وثائقية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", duration: 240 },
+            { id: 20, name: "فيديو 20", title: "عروض ضوئية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", duration: 190 }
         ];
         
         // حالة التطبيق
@@ -1276,6 +1392,7 @@
         let progressInterval = null;
         let fullscreenTimeout = null;
         let isFullscreen = false;
+        let isAppInventorMode = false;
         
         // عناصر DOM
         const settingsBtn = document.getElementById('settingsBtn');
@@ -1292,19 +1409,21 @@
         const progress = document.getElementById('progress');
         const currentTimeElement = document.getElementById('currentTime');
         const durationElement = document.getElementById('duration');
-        const artistImage = document.getElementById('artistImage');
         const artistName = document.getElementById('artistName');
         const songTitle = document.getElementById('songTitle');
         const contentContainer = document.getElementById('contentContainer');
         const contentTitle = document.getElementById('contentTitle');
         const addMoreBtn = document.getElementById('addMoreBtn');
         const visualizer = document.getElementById('visualizer');
+        const visualizerContainer = document.getElementById('visualizerContainer');
         const videoContainer = document.getElementById('videoContainer');
         const videoPlayer = document.getElementById('videoPlayer');
         const audioPlayer = document.getElementById('audioPlayer');
         const mediaArea = document.getElementById('mediaArea');
         const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
         const fullscreenIndicator = document.getElementById('fullscreenIndicator');
+        const compatibleVideoPlayer = document.getElementById('compatibleVideoPlayer');
+        const videoStatus = document.getElementById('videoStatus');
         
         // أزرار اختيار النوع
         const radioTypeBtn = document.getElementById('radioTypeBtn');
@@ -1316,14 +1435,41 @@
         const radioModeBtn = document.getElementById('radioModeBtn');
         const videoModeBtn = document.getElementById('videoModeBtn');
         
-        // إنشاء أشرطة المؤثرات الصوتية
+        // إنشاء أشرطة المؤثرات البصرية
         function createVisualizerBars() {
             visualizer.innerHTML = '';
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 25; i++) {
                 const bar = document.createElement('div');
                 bar.className = 'bar';
-                bar.style.animationDelay = `${i * 0.05}s`;
+                bar.style.animationDelay = `${i * 0.03}s`;
                 visualizer.appendChild(bar);
+            }
+        }
+        
+        // إنشاء مؤثرات إضافية (دوائر ونقاط)
+        function createAdditionalEffects() {
+            // إضافة دوائر
+            const circle1 = document.createElement('div');
+            circle1.className = 'circle circle-1';
+            visualizerContainer.appendChild(circle1);
+            
+            const circle2 = document.createElement('div');
+            circle2.className = 'circle circle-2';
+            visualizerContainer.appendChild(circle2);
+            
+            const circle3 = document.createElement('div');
+            circle3.className = 'circle circle-3';
+            visualizerContainer.appendChild(circle3);
+            
+            // إضافة نقاط متحركة
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 4}s`;
+                particle.style.animationDuration = `${3 + Math.random() * 3}s`;
+                visualizerContainer.appendChild(particle);
             }
         }
         
@@ -1339,12 +1485,12 @@
                     addMoreBtn.style.display = 'none';
                     break;
                 case 'music':
-                    items = itemsToShow || songs.slice(0, 20); // عرض 20 أغنية
+                    items = itemsToShow || songs.slice(0, 20);
                     contentTitle.textContent = `قائمة الأغاني (${songs.length})`;
                     addMoreBtn.style.display = 'flex';
                     break;
                 case 'video':
-                    items = itemsToShow || videos.slice(0, 20); // عرض 20 فيديو
+                    items = itemsToShow || videos.slice(0, 20);
                     contentTitle.textContent = `مقاطع الفيديو (${videos.length})`;
                     addMoreBtn.style.display = 'flex';
                     break;
@@ -1404,7 +1550,6 @@
                     item = radioStations.find(s => s.id === contentId);
                     artistName.textContent = item.name;
                     songTitle.textContent = 'بث مباشر';
-                    artistImage.src = item.image || 'https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
                     
                     // إعداد مشغل الراديو
                     setupRadioPlayer(item.url);
@@ -1414,7 +1559,6 @@
                     item = songs.find(s => s.id === contentId);
                     artistName.textContent = item.name;
                     songTitle.textContent = item.title;
-                    artistImage.src = item.image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
                     
                     // إعداد مشغل الأغاني
                     setupMusicPlayer(item.url, item.duration);
@@ -1425,11 +1569,14 @@
                     artistName.textContent = item.name;
                     songTitle.textContent = item.title;
                     
-                    // إعداد واجهة الفيديو
-                    setupVideoInterface();
-                    
-                    // إعداد مشغل الفيديو
-                    setupVideoPlayer(item.url, item.duration);
+                    // التحقق من وضع App Inventor
+                    if (isAppInventorMode) {
+                        setupAppInventorVideoPlayer(item.url);
+                    } else {
+                        // إعداد واجهة الفيديو العادية
+                        setupVideoInterface();
+                        setupVideoPlayer(item.url, item.duration);
+                    }
                     break;
             }
             
@@ -1441,8 +1588,8 @@
         
         // إعداد واجهة الفيديو
         function setupVideoInterface() {
-            // إخفاء صورة الفنان وإظهار الفيديو
-            artistImage.style.display = 'none';
+            // إخفاء المؤثرات وإظهار الفيديو
+            visualizerContainer.style.display = 'none';
             videoContainer.style.display = 'block';
             
             // إضافة حالة الفيديو النشط
@@ -1451,39 +1598,70 @@
             // إظهار زر الرجوع
             backBtn.style.display = 'flex';
             
+            // إخفاء مشغل App Inventor
+            compatibleVideoPlayer.style.display = 'none';
+            
             // إذا كان هناك وقت تشغيل سابق، أزله
             if (fullscreenTimeout) {
                 clearTimeout(fullscreenTimeout);
             }
-            
-            // بعد 5 ثواني، قم بتشغيل ملء الشاشة
-            fullscreenTimeout = setTimeout(() => {
-                enterFullscreenMode();
-            }, 5000);
         }
         
-        // تشغيل وضع ملء الشاشة
-        function enterFullscreenMode() {
-            if (isFullscreen) return;
+        // إعداد مشغل الفيديو الخاص بـ App Inventor
+        function setupAppInventorVideoPlayer(url) {
+            // إخفاء العناصر الأصلية
+            visualizerContainer.style.display = 'none';
+            videoContainer.style.display = 'none';
             
-            isFullscreen = true;
-            mediaArea.classList.add('fullscreen-mode');
-            exitFullscreenBtn.style.display = 'flex';
+            // إظهار مشغل App Inventor
+            compatibleVideoPlayer.style.display = 'block';
+            videoStatus.textContent = 'جاهز للتشغيل';
             
-            // إخفاء زر الرجوع في وضع ملء الشاشة
-            backBtn.style.display = 'none';
+            // إضافة حالة الفيديو النشط
+            mediaArea.classList.add('video-active');
             
-            // إظهار مؤشر ملء الشاشة
-            fullscreenIndicator.style.display = 'block';
-            setTimeout(() => {
-                fullscreenIndicator.style.display = 'none';
-            }, 2000);
+            // إظهار زر الرجوع
+            backBtn.style.display = 'flex';
             
-            // إخفاء رأس التطبيق وعناصر التحكم
-            document.querySelector('.app-header').style.display = 'none';
+            // تحديث رابط الفيديو
+            compatibleVideoPlayer.dataset.videoUrl = url;
             
-            // إضافة حدث للخروج من ملء الشاشة عند النقر على الفيديو
-            videoPlayer.addEventListener('click', toggleFullscreen);
+            // عرض اسم الفيديو
+            const item = videos.find(v => v.id === currentContentId);
+            if (item) {
+                videoStatus.textContent = `جاري تحميل: ${item.name}`;
+            }
+        }
+        
+        // تشغيل الفيديو في مشغل خارجي
+        function playInExternalPlayer() {
+            const videoUrl = compatibleVideoPlayer.dataset.videoUrl;
+            if (videoUrl) {
+                // محاولة فتح في نافذة جديدة
+                window.open(videoUrl, '_blank');
+                
+                // أو استخدام iframe كبديل
+                videoStatus.textContent = 'جاري فتح المشغل الخارجي...';
+                
+                // إرسال إلى App Inventor إذا كان موجوداً
+                if (typeof Android !== 'undefined' && Android.openVideo) {
+                    Android.openVideo(videoUrl);
+                }
+            }
+        }
+        
+        // تحميل الفيديو
+        function downloadVideo() {
+            const videoUrl = compatibleVideoPlayer.dataset.videoUrl;
+            if (videoUrl) {
+                // إنشاء رابط تحميل
+                const link = document.createElement('a');
+                link.href = videoUrl;
+                link.download = 'video.mp4';
+                link.click();
+                
+                videoStatus.textContent = 'جاري التحميل...';
+            }
         }
         
         // الخروج من وضع ملء الشاشة
@@ -1526,9 +1704,12 @@
                 mediaArea.classList.remove('fullscreen-mode');
                 exitFullscreenBtn.style.display = 'none';
                 
-                // إعادة إظهار صورة الفنان
-                artistImage.style.display = 'block';
+                // إعادة إظهار المؤثرات البصرية
+                visualizerContainer.style.display = 'flex';
                 videoContainer.style.display = 'none';
+                
+                // إخفاء مشغل App Inventor
+                compatibleVideoPlayer.style.display = 'none';
                 
                 // إخفاء زر الرجوع
                 backBtn.style.display = 'none';
@@ -1542,7 +1723,6 @@
                 // إعادة تعيين المحتوى
                 artistName.textContent = "أحلام";
                 songTitle.textContent = "أغنية مختارة";
-                artistImage.src = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80";
                 
                 // إعادة تشغيل العناصر المخفية
                 document.querySelectorAll('.progress-area, .controls, .content-type-selector, .content-bar').forEach(el => {
@@ -1588,40 +1768,6 @@
             }
         }
         
-        // إضافة أغنية جديدة
-        function addNewSong(name, title, image, url, duration = 180) {
-            const newId = songs.length > 0 ? Math.max(...songs.map(s => s.id)) + 1 : 1;
-            const newSong = {
-                id: newId,
-                name: name,
-                title: title,
-                icon: "fas fa-music",
-                image: image,
-                url: url,
-                duration: duration
-            };
-            songs.push(newSong);
-            createContentItems('music');
-            return newId;
-        }
-        
-        // إضافة فيديو جديد
-        function addNewVideo(name, title, image, url, duration = 180) {
-            const newId = videos.length > 0 ? Math.max(...videos.map(v => v.id)) + 1 : 1;
-            const newVideo = {
-                id: newId,
-                name: name,
-                title: title,
-                icon: "fas fa-video",
-                image: image,
-                url: url,
-                duration: duration
-            };
-            videos.push(newVideo);
-            createContentItems('video');
-            return newId;
-        }
-        
         // إظهار/إخفاء مؤشر التحميل
         function showLoadingIndicator(contentId, contentType, show) {
             const items = document.querySelectorAll('.content-item');
@@ -1644,7 +1790,7 @@
             mediaArea.classList.remove('video-active');
             mediaArea.classList.remove('fullscreen-mode');
             exitFullscreenBtn.style.display = 'none';
-            artistImage.style.display = 'block';
+            visualizerContainer.style.display = 'flex';
             
             // إخفاء زر الرجوع
             backBtn.style.display = 'none';
@@ -1654,6 +1800,9 @@
                 clearTimeout(fullscreenTimeout);
                 fullscreenTimeout = null;
             }
+            
+            // إخفاء مشغل App Inventor
+            compatibleVideoPlayer.style.display = 'none';
             
             if (url) {
                 audioPlayer.src = url;
@@ -1696,7 +1845,7 @@
             mediaArea.classList.remove('video-active');
             mediaArea.classList.remove('fullscreen-mode');
             exitFullscreenBtn.style.display = 'none';
-            artistImage.style.display = 'block';
+            visualizerContainer.style.display = 'flex';
             
             // إخفاء زر الرجوع
             backBtn.style.display = 'none';
@@ -1706,6 +1855,9 @@
                 clearTimeout(fullscreenTimeout);
                 fullscreenTimeout = null;
             }
+            
+            // إخفاء مشغل App Inventor
+            compatibleVideoPlayer.style.display = 'none';
             
             if (url) {
                 audioPlayer.src = url;
@@ -1755,16 +1907,12 @@
             }).catch(error => {
                 console.log("خطأ في تشغيل الفيديو:", error);
                 
-                // إذا فشل التشغيل، استخدم المدة الافتراضية
-                duration = videoDuration || 180;
-                currentTime = 0;
-                updateTimeDisplay();
-                
-                // محاكاة التشغيل للفيديو
-                isPlaying = true;
-                playIcon.className = 'fas fa-pause';
-                startVisualizer();
-                startProgress();
+                // إذا فشل التشغيل، تحويل إلى وضع App Inventor
+                videoStatus.textContent = 'فشل تشغيل الفيديو. جارٍ التبديل إلى الوضع المتوافق...';
+                setTimeout(() => {
+                    isAppInventorMode = true;
+                    setupAppInventorVideoPlayer(url);
+                }, 1500);
             });
         }
         
@@ -1881,8 +2029,10 @@
                         startProgress();
                         break;
                     case 'video':
-                        videoPlayer.play().catch(e => console.log("خطأ في تشغيل الفيديو:", e));
-                        startProgressForVideo();
+                        if (!isAppInventorMode) {
+                            videoPlayer.play().catch(e => console.log("خطأ في تشغيل الفيديو:", e));
+                            startProgressForVideo();
+                        }
                         break;
                 }
             } else {
@@ -1898,7 +2048,9 @@
                         audioPlayer.pause();
                         break;
                     case 'video':
-                        videoPlayer.pause();
+                        if (!isAppInventorMode) {
+                            videoPlayer.pause();
+                        }
                         break;
                 }
                 
@@ -1906,19 +2058,39 @@
             }
         }
         
-        // بدء المؤثرات الصوتية
+        // بدء المؤثرات البصرية
         function startVisualizer() {
             const bars = document.querySelectorAll('.bar');
             bars.forEach(bar => {
                 bar.style.animationPlayState = 'running';
             });
+            
+            const circles = document.querySelectorAll('.circle');
+            circles.forEach(circle => {
+                circle.style.animationPlayState = 'running';
+            });
+            
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach(particle => {
+                particle.style.animationPlayState = 'running';
+            });
         }
         
-        // إيقاف المؤثرات الصوتية
+        // إيقاف المؤثرات البصرية
         function stopVisualizer() {
             const bars = document.querySelectorAll('.bar');
             bars.forEach(bar => {
                 bar.style.animationPlayState = 'paused';
+            });
+            
+            const circles = document.querySelectorAll('.circle');
+            circles.forEach(circle => {
+                circle.style.animationPlayState = 'paused';
+            });
+            
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach(particle => {
+                particle.style.animationPlayState = 'paused';
             });
         }
         
@@ -1946,6 +2118,32 @@
             selectContent(1, type);
         }
         
+        // تغيير الوضع من الإعدادات
+        function changeMode(mode) {
+            // تحديث أزرار الوضع
+            musicModeBtn.classList.toggle('active', mode === 'music');
+            radioModeBtn.classList.toggle('active', mode === 'radio');
+            videoModeBtn.classList.toggle('active', mode === 'video');
+            
+            // تغيير نوع المحتوى حسب الوضع
+            if (mode !== currentContentType) {
+                changeContentType(mode);
+            }
+        }
+        
+        // تمكين/تعطيل وضع App Inventor
+        function toggleAppInventorMode(enable) {
+            isAppInventorMode = enable;
+            
+            // إذا كنا في وضع الفيديو وتم تفعيل وضع App Inventor
+            if (enable && currentContentType === 'video') {
+                const item = videos.find(v => v.id === currentContentId);
+                if (item) {
+                    setupAppInventorVideoPlayer(item.url);
+                }
+            }
+        }
+        
         // التعامل مع تغيير شريط التقدم
         function handleProgressBarClick(e) {
             const rect = progressBar.getBoundingClientRect();
@@ -1954,7 +2152,7 @@
             const percent = clickPosition / width;
             
             // تحديث حسب نوع المحتوى
-            if (currentContentType === 'video') {
+            if (currentContentType === 'video' && !isAppInventorMode) {
                 if (videoPlayer.duration) {
                     videoPlayer.currentTime = percent * videoPlayer.duration;
                     currentTime = videoPlayer.currentTime;
@@ -1975,6 +2173,7 @@
         // تهيئة التطبيق
         function initApp() {
             createVisualizerBars();
+            createAdditionalEffects();
             createContentItems('radio');
             selectContent(1, 'radio');
             
@@ -2047,12 +2246,26 @@
                 videoPlayer.volume = volume;
             });
             
+            // التحكم في وضع App Inventor
+            const appInventorToggle = document.getElementById('appInventorModeToggle');
+            appInventorToggle.addEventListener('change', function() {
+                toggleAppInventorMode(this.checked);
+            });
+            
             // إغلاق الإعدادات بالنقر خارجها
             settingsOverlay.addEventListener('click', (e) => {
                 if (e.target === settingsOverlay) {
                     settingsOverlay.style.display = 'none';
                 }
             });
+            
+            // كشف نظام التشغيل تلقائياً
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(userAgent)) {
+                // تفعيل وضع App Inventor تلقائياً للأندرويد
+                isAppInventorMode = true;
+                appInventorToggle.checked = true;
+            }
         }
         
         // تشغيل التطبيق عند تحميل الصفحة
