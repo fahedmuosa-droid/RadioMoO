@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- منع التكبير في المتصفح -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>مشغل الوسائط - Media Player</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -15,25 +13,6 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
-        }
-        
-        /* منع التكبير بالنقر المزدوج */
-        * {
-            -webkit-touch-callout: none;
-            -webkit-text-size-adjust: none;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
-        }
-        
-        html {
-            overflow: hidden;
-            height: 100%;
-            position: fixed;
-            width: 100%;
         }
         
         body {
@@ -41,10 +20,7 @@
             color: #fff;
             overflow-x: hidden;
             height: 100vh;
-            width: 100%;
-            position: fixed;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-            -webkit-overflow-scrolling: touch;
         }
         
         /* إخفاء شريط التمرير لجميع المتصفحات */
@@ -59,7 +35,6 @@
         body {
             -ms-overflow-style: none;
             scrollbar-width: none;
-            overflow: hidden;
         }
         
         .container {
@@ -71,7 +46,6 @@
             background: linear-gradient(to bottom, #0a0a0a, #000);
             position: relative;
             overflow: hidden;
-            -webkit-overflow-scrolling: touch;
         }
         
         /* رأس التطبيق */
@@ -176,162 +150,83 @@
             background-color: transparent;
         }
         
-        .artist-image-container {
-            width: 280px;
-            height: 280px;
+        /* تحديث: تم إزالة الحاوية الخاصة بصورة الفنان */
+        /* وإعادة تصميم المؤثرات الصوتية لتكون أكبر */
+        
+        /* المؤثرات الصوتية - المحدثة */
+        .visualizer-container {
+            width: 320px;
+            height: 320px;
             border-radius: 50%;
-            overflow: hidden;
             position: relative;
-            box-shadow: 0 0 40px rgba(100, 100, 255, 0.3);
+            box-shadow: 0 0 50px rgba(100, 100, 255, 0.4);
             margin-bottom: 25px;
-            border: 3px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, rgba(20, 20, 40, 0.8) 30%, rgba(10, 10, 20, 0.9) 70%);
+            border: 3px solid rgba(65, 105, 225, 0.3);
             transition: all 0.5s ease;
         }
         
-        /* حالة الفيديو النشط - إخفاء صورة الفنان */
-        .media-area.video-active .artist-image-container {
-            display: none;
-        }
-        
-        #artistImage {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        /* لوحة المؤثرات الصوتية الجذابة */
-        .visualizer-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 5;
-            background: radial-gradient(circle, rgba(65, 105, 225, 0.1) 0%, rgba(10, 10, 10, 0.8) 70%);
-        }
-        
-        /* حالة الفيديو النشط - إخفاء المؤثرات */
+        /* حالة الفيديو النشط - إخفاء المؤثرات الصوتية */
         .media-area.video-active .visualizer-container {
             display: none;
         }
         
-        .visualizer-title {
-            font-size: 1.2rem;
-            color: #fff;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-        
-        .visualizer-bars {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 250px;
-            width: 100%;
-            gap: 3px;
-            padding: 0 20px;
-        }
-        
-        .bar {
-            width: 12px;
-            min-height: 20px;
-            background: linear-gradient(to top, 
-                rgba(138, 43, 226, 0.9), 
-                rgba(65, 105, 225, 0.8),
-                rgba(100, 149, 237, 0.7));
-            border-radius: 6px 6px 3px 3px;
-            transition: height 0.2s ease;
-            box-shadow: 
-                0 0 10px rgba(138, 43, 226, 0.5),
-                inset 0 0 5px rgba(255, 255, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .bar::after {
-            content: '';
+        .visualizer {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 30%;
-            background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0.8), 
-                rgba(255, 255, 255, 0.3));
-            border-radius: 6px 6px 3px 3px;
-        }
-        
-        .bar-pulse {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-        
-        @keyframes pulse {
-            0% { 
-                transform: translateX(-50%) scale(0.8);
-                opacity: 0.7;
-            }
-            50% { 
-                transform: translateX(-50%) scale(1.3);
-                opacity: 1;
-            }
-            100% { 
-                transform: translateX(-50%) scale(0.8);
-                opacity: 0.7;
-            }
-        }
-        
-        /* مؤشرات الصوت التفاعلية */
-        .sound-waves {
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
-            gap: 10px;
+            flex-wrap: wrap;
+            transition: all 0.5s ease;
         }
         
-        .wave {
-            width: 4px;
-            height: 20px;
-            background: linear-gradient(to top, 
-                rgba(65, 105, 225, 0.7), 
-                rgba(138, 43, 226, 0.7));
-            border-radius: 2px;
-            animation: waveMove 2s infinite ease-in-out;
+        /* تحديث: أشرطة أكبر للمؤثرات الصوتية */
+        .bar {
+            width: 8px; /* تم التوسيع من 4px إلى 8px */
+            height: 15px; /* تم التوسيع من 10px إلى 15px */
+            margin: 0 3px; /* تم التوسيع من 2px إلى 3px */
+            background: linear-gradient(to top, #4169e1, #8a2be2, #ff00ff);
+            border-radius: 4px;
+            animation: soundWave 1.5s infinite ease-in-out;
+            opacity: 0.8;
+            box-shadow: 0 0 10px rgba(65, 105, 225, 0.5);
         }
         
-        @keyframes waveMove {
-            0%, 100% { 
-                height: 20px;
-                opacity: 0.6;
-            }
-            25% { 
-                height: 40px;
-                opacity: 0.8;
-            }
-            50% { 
-                height: 60px;
-                opacity: 1;
-            }
-            75% { 
-                height: 40px;
-                opacity: 0.8;
-            }
+        @keyframes soundWave {
+            0%, 100% { height: 15px; transform: scaleY(1); }
+            50% { height: 80px; transform: scaleY(1.2); } /* تم التوسيع من 50px إلى 80px */
+        }
+        
+        /* إضافة تأثير إضافي للمؤثرات */
+        .visualizer-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.7) 30%, rgba(65, 105, 225, 0.9) 70%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.8);
+            z-index: 5;
+        }
+        
+        .visualizer-center i {
+            font-size: 24px;
+            color: white;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .video-container {
@@ -354,56 +249,65 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
         }
         
-        /* زر الرجوع للقائمة في الفيديو */
-        .video-back-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 1001;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        /* تحسينات للفيديو على Android */
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* تحسينات خاصة بـ Android */
+        @media (max-width: 768px) {
+            .video-container {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .video-container video {
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                -webkit-perspective: 1000;
+                perspective: 1000;
+            }
+        }
+        
+        /* حالة ملء الشاشة */
+        .media-area.fullscreen-mode {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            border-radius: 0;
+        }
+        
+        .media-area.fullscreen-mode .video-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+        
+        .media-area.fullscreen-mode .artist-info {
             display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
-        .video-back-btn:hover {
-            background-color: rgba(65, 105, 225, 0.8);
-            transform: scale(1.1);
-        }
-        
-        /* زر الخروج من ملء الشاشة */
-        .exit-fullscreen-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: none;
-            transition: all 0.3s ease;
-        }
-        
-        .exit-fullscreen-btn:hover {
-            background-color: rgba(65, 105, 225, 0.8);
-            transform: scale(1.1);
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
         }
         
         /* معلومات الفنان */
@@ -435,6 +339,32 @@
             font-size: 1rem;
             color: #aaa;
             margin-bottom: 10px;
+        }
+        
+        /* زر الخروج من ملء الشاشة */
+        .exit-fullscreen-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: none;
+            transition: all 0.3s ease;
+        }
+        
+        .exit-fullscreen-btn:hover {
+            background-color: rgba(65, 105, 225, 0.8);
+            transform: scale(1.1);
         }
         
         /* شريط التقدم */
@@ -753,11 +683,215 @@
             10%, 90% { opacity: 1; }
         }
         
+        /* نافذة الإعدادات */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .settings-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #111;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .settings-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .close-settings {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-settings:hover, .close-settings:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .settings-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #8a2be2;
+        }
+        
+        .volume-control, .equalizer-control {
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        .volume-slider, .equalizer-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #333;
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb, .equalizer-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #4169e1;
+            cursor: pointer;
+        }
+        
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #222;
+        }
+        
+        .option-label {
+            font-size: 1rem;
+            color: #ccc;
+        }
+        
+        .option-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            right: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #4169e1;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(-24px);
+        }
+        
+        .mode-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .mode-btn {
+            padding: 10px 20px;
+            background-color: #222;
+            border: none;
+            color: #aaa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .mode-btn.active {
+            background-color: #4169e1;
+            color: #fff;
+        }
+        
+        .mode-btn:hover, .mode-btn:active {
+            background-color: #333;
+        }
+        
         /* تصميم متجاوب */
         @media (max-width: 480px) {
-            .artist-image-container {
-                width: 240px;
-                height: 240px;
+            .visualizer-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .bar {
+                width: 6px;
+                margin: 0 2.5px;
+            }
+            
+            @keyframes soundWave {
+                0%, 100% { height: 12px; transform: scaleY(1); }
+                50% { height: 70px; transform: scaleY(1.2); }
             }
             
             .app-name {
@@ -795,25 +929,22 @@
             .media-area.video-active .video-container {
                 height: 55%;
             }
-            
-            .visualizer-bars {
-                height: 200px;
-            }
-            
-            .bar {
-                width: 8px;
-            }
-            
-            .visualizer-title {
-                font-size: 1rem;
-            }
         }
         
         @media (max-height: 700px) {
-            .artist-image-container {
-                width: 200px;
-                height: 200px;
+            .visualizer-container {
+                width: 240px;
+                height: 240px;
                 margin-bottom: 15px;
+            }
+            
+            .bar {
+                width: 5px;
+            }
+            
+            @keyframes soundWave {
+                0%, 100% { height: 10px; transform: scaleY(1); }
+                50% { height: 60px; transform: scaleY(1.2); }
             }
             
             .artist-name {
@@ -827,10 +958,16 @@
             .media-area.video-active .video-container {
                 height: 60%;
             }
-            
-            .visualizer-bars {
-                height: 180px;
-            }
+        }
+        
+        /* مؤشرات التحميل */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            color: #aaa;
         }
         
         /* مساحة فارغة للجزء السفلي الآمن */
@@ -839,55 +976,39 @@
             width: 100%;
         }
         
-        /* صفحة التحميل للفيديو */
-        .video-loading {
+        /* إضافة تحسينات إضافية للفيديو على Android */
+        .video-controls-overlay {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
             z-index: 10;
-            display: none;
         }
         
-        .video-loading-text {
-            margin-top: 15px;
-            color: #fff;
-            font-size: 1rem;
+        .video-container:hover .video-controls-overlay {
+            opacity: 1;
         }
         
-        /* زر مشاهدة الفيديو */
-        .watch-video-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(45deg, #8a2be2, #4169e1);
+        .video-control-btn {
+            background: rgba(0,0,0,0.6);
             border: none;
             color: white;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
+            display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 20;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-        }
-        
-        .watch-video-btn:hover {
-            transform: translate(-50%, -50%) scale(1.05);
-            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4);
-        }
-        
-        /* نوافذ الإعدادات والعناصر الإضافية */
-        .settings-overlay,
-        .player-selector-btn,
-        .video-unsupported-warning {
-            display: none;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -911,43 +1032,31 @@
         
         <!-- منطقة الفنان/الفيديو -->
         <div class="media-area" id="mediaArea">
-            <div class="artist-image-container">
-                <img id="artistImage" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="صورة الفنان">
-                
-                <!-- لوحة المؤثرات الصوتية الجذابة -->
-                <div class="visualizer-container" id="visualizerContainer">
-                    <div class="visualizer-title">
-                        <i class="fas fa-music"></i> المؤثرات الصوتية
-                    </div>
-                    <div class="visualizer-bars" id="visualizerBars">
-                        <!-- سيتم إنشاء الأشرطة بواسطة JavaScript -->
-                    </div>
-                    <div class="sound-waves" id="soundWaves">
-                        <!-- سيتم إنشاء موجات الصوت بواسطة JavaScript -->
-                    </div>
+            <!-- تحديث: استبدال حاوية صورة الفنان بحاوية المؤثرات الصوتية الكبيرة -->
+            <div class="visualizer-container">
+                <!-- مؤثرات صوتية -->
+                <div class="visualizer" id="visualizer">
+                    <!-- سيتم إنشاء الأشرطة بواسطة JavaScript -->
+                </div>
+                <div class="visualizer-center">
+                    <i class="fas fa-music"></i>
                 </div>
             </div>
             
-            <!-- زر مشاهدة الفيديو -->
-            <button class="watch-video-btn" id="watchVideoBtn">
-                <i class="fas fa-play-circle"></i>
-                مشاهدة الفيديو
-            </button>
-            
-            <!-- صفحة تحميل الفيديو -->
-            <div class="video-loading" id="videoLoading">
-                <div class="audio-loading" style="width: 40px; height: 40px; border-width: 4px;"></div>
-                <div class="video-loading-text">جاري تحميل الفيديو...</div>
-            </div>
-            
-            <!-- مشغل الفيديو -->
+            <!-- مشغل الفيديو (مخفي بشكل افتراضي) -->
             <div class="video-container" id="videoContainer">
-                <!-- سيتم إضافة iframe ديناميكياً -->
-                
-                <!-- زر الرجوع للقائمة -->
-                <button class="video-back-btn" id="videoBackBtn">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
+                <video id="videoPlayer" playsinline webkit-playsinline>
+                    <source src="" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                </video>
+                <div class="video-controls-overlay">
+                    <button class="video-control-btn" id="videoPlayPauseBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="video-control-btn" id="videoFullscreenBtn">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
             </div>
             
             <!-- زر الخروج من ملء الشاشة -->
@@ -1030,204 +1139,308 @@
         <div class="safe-area-bottom"></div>
     </div>
     
+    <!-- نافذة الإعدادات -->
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-container">
+            <div class="settings-header">
+                <div class="settings-title">الإعدادات</div>
+                <button class="close-settings" id="closeSettings">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- مبدل الوضع -->
+            <div class="mode-switcher">
+                <button class="mode-btn active" id="musicModeBtn">موسيقى</button>
+                <button class="mode-btn" id="radioModeBtn">راديو</button>
+                <button class="mode-btn" id="videoModeBtn">فيديو</button>
+            </div>
+            
+            <!-- إعدادات الصوت -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <i class="fas fa-volume-up"></i>
+                    <span>إعدادات الصوت</span>
+                </div>
+                
+                <div class="volume-control">
+                    <div class="settings-option">
+                        <div class="option-label">مستوى الصوت</div>
+                        <div class="option-control">
+                            <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="equalizer-control">
+                    <div class="settings-option">
+                        <div class="option-label">التوازن</div>
+                        <div class="option-control">
+                            <input type="range" min="-10" max="10" value="0" class="equalizer-slider" id="balanceSlider">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <div class="option-label">الجهارة</div>
+                        <div class="option-control">
+                            <input type="range" min="0" max="20" value="10" class="equalizer-slider" id="bassSlider">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <div class="option-label">الجهير</div>
+                        <div class="option-control">
+                            <input type="range" min="0" max="20" value="10" class="equalizer-slider" id="trebleSlider">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- إعدادات الصورة -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <i class="fas fa-image"></i>
+                    <span>إعدادات الصورة</span>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">السطوع</div>
+                    <div class="option-control">
+                        <input type="range" min="0" max="100" value="80" class="volume-slider" id="brightnessSlider">
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">التكبير</div>
+                    <div class="option-control">
+                        <input type="range" min="100" max="200" value="100" class="volume-slider" id="zoomSlider">
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">مؤثرات الصورة</div>
+                    <div class="option-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="visualEffectsToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- إعدادات المشغل -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <i class="fas fa-play-circle"></i>
+                    <span>إعدادات المشغل</span>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">التشغيل التلقائي</div>
+                    <div class="option-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoPlayToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">حفظ التقدم</div>
+                    <div class="option-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="saveProgressToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">إظهار الكلمات</div>
+                    <div class="option-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="lyricsToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- إعدادات أخرى -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <i class="fas fa-cog"></i>
+                    <span>إعدادات أخرى</span>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">الوضع الليلي الدائم</div>
+                    <div class="option-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">الإشعارات</div>
+                    <div class="option-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">جودة عالية</div>
+                    <div class="option-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="highQualityToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- عنصر صوتي مخفي -->
     <audio id="audioPlayer" style="display: none;"></audio>
     
     <script>
-        // البيانات الأولية مع روابط صوت حقيقية للراديو
+        // البيانات الأولية مع روابط صوت حقيقية للراديو (20 محطة)
         const radioStations = [
             { id: 1, name: "LB طرب", type: "راديو", icon: "fas fa-microphone", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX12GI9uvjX-fN6StHaAe2WyNLVAhrOhmWkw&s", url: "https://stream.zeno.fm/qngq01c4mfhvv.mp3", duration: "مباشر" },
             { id: 2, name: "FM طرب", type: "راديو", icon: "fas fa-microphone", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAHb8V-_pReH14jreKRE6cJwt6CiQGeGImdw&s", url: "https://stream.zeno.fm/4nnehdnvpg8uv.mp3", duration: "مباشر" },
             { id: 3, name: "الرجال", type: "راديو", icon: "fas fa-microphone", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/wrfc0nkbl2wuv.mp3", duration: "مباشر" },
             { id: 4, name: "FM ميلودي", type: "راديو", icon: "fas fa-microphone", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkmoG8iI3dP_TQV-zvvjHTMRVG6iH4UcNOiw&s", url: "https://stream.zeno.fm/3gkedytbapbuv.mp3", duration: "مباشر" },
-            { id: 5, name: "FM ستار", type: "راديو", icon: "fas fa-microphone", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/qv4bv7t3afhvv.mp3", duration: "مباشر" }
+            { id: 5, name: "FM ستار", type: "راديو", icon: "fas fa-microphone", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/qv4bv7t3afhvv.mp3", duration: "مباشر" },
+            { id: 6, name: "نغم الطرب", type: "راديو", icon: "fas fa-microphone", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/4nnehdnvpg8uv.mp3", duration: "مباشر" },
+            { id: 7, name: "FM Arta", type: "راديو", icon: "fas fa-microphone", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "http://edge.mixlr.com/channel/qtgru.mp3", duration: "مباشر" },
+            { id: 8, name: "FM فرح", type: "راديو", icon: "fas fa-microphone", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQwHVhkYPrZ9RYBTs4NtKC3Jt-DU8UGrwxvg&s", url: "http://radio.farah.fm/.mp3", duration: "مباشر" },
+            { id: 9, name: "FM شام", type: "راديو", icon: "fas fa-microphone", image: "https://static2.mytuner.mobi/media/tvos_radios/765/sham-fm-dh-shm-f-m.af4e42e5.jpg", url: "http://radioshamfm.grtvstream.com:8400/.mp3", duration: "مباشر" },
+            { id: 10, name: "فيروز", type: "راديو", icon: "fas fa-microphone", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/zv3e5wykprhvv.mp3", duration: "مباشر" },
+            { id: 11, name: "ملحم بركات", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/gwhk3u1keuhvv.mp3", duration: "مباشر" },
+            { id: 12, name: "طرب زمان", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "http://live.medi1.com/Tarab#.mp3", duration: "مباشر" },
+            { id: 13, name: "اليسا", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/kpkvku1ssnhvv.mp3", duration: "مباشر" },
+            { id: 14, name: "عرب ميكس", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/efx5psd00qruv.mp3", duration: "مباشر" },
+            { id: 15, name: "ميلودي", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://stream.zeno.fm/3gkedytbapbuv.mp3", duration: "مباشر" },
+            { id: 16, name: "اربيسك", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "http://185.4.87.79:8000/stream.mp3", duration: "مباشر" },
+            { id: 17, name: "عرب", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "http://arabnights-prod.live-streams.nl:8020/live.mp3", duration: "مباشر" },
+            { id: 18, name: "روتانا Mix", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "http://curiosity.shoutca.st:6035/.mp3", duration: "مباشر" },
+            { id: 19, name: "صوت الغد", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://sawtelghad.org:7001/.mp3", duration: "مباشر" },
+            { id: 20, name: "جيكوغا", type: "راديو", icon: "fas fa-broadcast-tower", image: "https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "http://37.26.69.30:8080/.mp3", duration: "مباشر" }
         ];
         
-        // بيانات الأغاني مع روابط صوت حقيقية
+        // بيانات الأغاني مع روابط صوت حقيقية (20 أغنية)
         let songs = [
             { id: 1, name: "أحلام", title: "أغنية 1", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", duration: 180 },
             { id: 2, name: "كاظم الساهر", title: "أغنية 2", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", duration: 210 },
             { id: 3, name: "نجوى كرم", title: "أغنية 3", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", duration: 195 },
             { id: 4, name: "ماجد المهندس", title: "أغنية 4", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", duration: 240 },
-            { id: 5, name: "نوال الكويتية", title: "أغنية 5", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", duration: 185 }
+            { id: 5, name: "نوال الكويتية", title: "أغنية 5", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", duration: 185 },
+            { id: 6, name: "عمرو دياب", title: "أغنية 6", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", duration: 220 },
+            { id: 7, name: "ناصيف زيتون", title: "أغنية 7", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", duration: 190 },
+            { id: 8, name: "عاصي الحلاني", title: "أغنية 8", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", duration: 205 },
+            { id: 9, name: "وائل جسار", title: "أغنية 9", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", duration: 215 },
+            { id: 10, name: "ناريمان", title: "أغنية 10", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", duration: 195 },
+            { id: 11, name: "محمد عبده", title: "أغنية 11", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3", duration: 200 },
+            { id: 12, name: "راشد الماجد", title: "أغنية 12", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3", duration: 185 },
+            { id: 13, name: "عبدالمجيد عبدالله", title: "أغنية 13", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", duration: 220 },
+            { id: 14, name: "مشاعل", title: "أغنية 14", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", duration: 195 },
+            { id: 15, name: "علي عبدالكريم", title: "أغنية 15", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", duration: 210 },
+            { id: 16, name: "لطيفة", title: "أغنية 16", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", duration: 180 },
+            { id: 17, name: "صابر الرباعي", title: "أغنية 17", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", duration: 195 },
+            { id: 18, name: "شذى حسون", title: "أغنية 18", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", duration: 220 },
+            { id: 19, name: "محمد العريفي", title: "أغنية 19", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", duration: 240 },
+            { id: 20, name: "نوال الزغبي", title: "أغنية 20", icon: "fas fa-music", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", duration: 190 }
         ];
         
-        // بيانات الفيديو مع روابط مباشرة
+        // بيانات الفيديو (20 فيديو)
         let videos = [
-            { id: 1, name: "فيديو قصير", title: "افلام كرتون", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", duration: 180, external: true },
-            { id: 2, name: "فيديو تعليمي", title: "كرتون تعليمي", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", duration: 210, external: true },
-            { id: 3, name: "فيديو ترفيهي", title: "مقاطع مضحكة", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", duration: 195, external: true },
-            { id: 4, name: "فيديو موسيقي", title: "أغاني مصورة", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.youtube.com/embed/dQw4w9WgXcQ", duration: 240, external: true },
-            { id: 5, name: "فيديو مباشر", title: "بث حي", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "https://www.youtube.com/embed/jNQXAC9IVRw", duration: 185, external: true }
+            { id: 1, name: "فيديو قصير", title: "افلام كرتون", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", duration: 180 },
+            { id: 2, name: "فيديو 2", title: "كرتون", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg", url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", duration: 210 },
+            { id: 3, name: "فيديو 3", title: "حفلات مباشرة", icon: "fas fa-video", image: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg", url: "http://gifted-satoshi.192-185-7-210.plesk.page.192-185-7-210.hgws27.hgwin.temp.domains/api/ProveAttachmentApi/open-prove-attachment/765b0ad0-20c5-4a99-f798-08dcef7f61b1", duration: 195 },
+            { id: 4, name: "فيديو 4", title: "أغاني مصورة", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 240 },
+            { id: 5, name: "فيديو 5", title: "عروض موسيقية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 185 },
+            { id: 6, name: "فيديو 6", title: "مقاطع ترفيهية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 220 },
+            { id: 7, name: "فيديو 7", title: "برامج موسيقية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 190 },
+            { id: 8, name: "فيديو 8", title: "عروض راقصة", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 205 },
+            { id: 9, name: "فيديو 9", title: "حفلات غنائية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 215 },
+            { id: 10, name: "فيديو 10", title: "مقاطع تعليمية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 195 },
+            { id: 11, name: "فيديو 11", title: "حفلات حية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 200 },
+            { id: 12, name: "فيديو 12", title: "عروض فنية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 185 },
+            { id: 13, name: "فيديو 13", title: "مقاطع تاريخية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 220 },
+            { id: 14, name: "فيديو 14", title: "عروض مسرحية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 195 },
+            { id: 15, name: "فيديو 15", title: "حفلات عالمية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 210 },
+            { id: 16, name: "فيديو 16", title: "مقاطع كوميدية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 180 },
+            { id: 17, name: "فيديو 17", title: "عروض سحرية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 195 },
+            { id: 18, name: "فيديو 18", title: "حفلات أوركسترا", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 220 },
+            { id: 19, name: "فيديو 19", title: "مقاطع وثائقية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 240 },
+            { id: 20, name: "فيديو 20", title: "عروض ضوئية", icon: "fas fa-video", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", url: "", duration: 190 }
         ];
         
         // حالة التطبيق
         let isPlaying = false;
         let currentContentId = 1;
-        let currentContentType = "radio";
+        let currentContentType = "radio"; // radio, music, video
         let currentTime = 0;
         let duration = 0;
         let progressInterval = null;
         let fullscreenTimeout = null;
         let isFullscreen = false;
-        let visualizerInterval = null;
-        let audioContext = null;
-        let analyser = null;
-        let dataArray = null;
-        let source = null;
         
         // عناصر DOM
         const settingsBtn = document.getElementById('settingsBtn');
         const backBtn = document.getElementById('backBtn');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const closeSettings = document.getElementById('closeSettings');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const playIcon = document.getElementById('playIcon');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const repeatBtn = document.getElementById('repeatBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
         const progressBar = document.getElementById('progressBar');
         const progress = document.getElementById('progress');
         const currentTimeElement = document.getElementById('currentTime');
         const durationElement = document.getElementById('duration');
-        const artistImage = document.getElementById('artistImage');
         const artistName = document.getElementById('artistName');
         const songTitle = document.getElementById('songTitle');
         const contentContainer = document.getElementById('contentContainer');
         const contentTitle = document.getElementById('contentTitle');
         const addMoreBtn = document.getElementById('addMoreBtn');
-        const visualizerBars = document.getElementById('visualizerBars');
-        const soundWaves = document.getElementById('soundWaves');
+        const visualizer = document.getElementById('visualizer');
         const videoContainer = document.getElementById('videoContainer');
+        const videoPlayer = document.getElementById('videoPlayer');
         const audioPlayer = document.getElementById('audioPlayer');
         const mediaArea = document.getElementById('mediaArea');
         const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
         const fullscreenIndicator = document.getElementById('fullscreenIndicator');
-        const watchVideoBtn = document.getElementById('watchVideoBtn');
-        const videoLoading = document.getElementById('videoLoading');
-        const videoBackBtn = document.getElementById('videoBackBtn');
+        const videoPlayPauseBtn = document.getElementById('videoPlayPauseBtn');
+        const videoFullscreenBtn = document.getElementById('videoFullscreenBtn');
         
         // أزرار اختيار النوع
         const radioTypeBtn = document.getElementById('radioTypeBtn');
         const musicTypeBtn = document.getElementById('musicTypeBtn');
         const videoTypeBtn = document.getElementById('videoTypeBtn');
         
-        // إنشاء لوحة المؤثرات الصوتية الجذابة
-        function createVisualizer() {
-            visualizerBars.innerHTML = '';
-            soundWaves.innerHTML = '';
-            
-            // إنشاء 25 شريط بأطوال وألوان مختلفة
-            for (let i = 0; i < 25; i++) {
+        // عناصر التحكم في الوضع (من الإعدادات)
+        const musicModeBtn = document.getElementById('musicModeBtn');
+        const radioModeBtn = document.getElementById('radioModeBtn');
+        const videoModeBtn = document.getElementById('videoModeBtn');
+        
+        // إنشاء أشرطة المؤثرات الصوتية - المحدثة
+        function createVisualizerBars() {
+            visualizer.innerHTML = '';
+            for (let i = 0; i < 24; i++) { // زيادة عدد الأشرطة
                 const bar = document.createElement('div');
                 bar.className = 'bar';
-                
-                // إضافة نبض في الأسفل
-                const pulse = document.createElement('div');
-                pulse.className = 'bar-pulse';
-                bar.appendChild(pulse);
-                
-                // تعيين أطوال وألوان مختلفة
-                const randomHeight = 20 + Math.random() * 80;
-                bar.style.height = `${randomHeight}px`;
-                bar.style.animationDelay = `${i * 0.05}s`;
-                
-                visualizerBars.appendChild(bar);
+                bar.style.animationDelay = `${i * 0.03}s`; // تقليل التأخير للحركة السريعة
+                visualizer.appendChild(bar);
             }
-            
-            // إنشاء 8 موجات صوتية
-            for (let i = 0; i < 8; i++) {
-                const wave = document.createElement('div');
-                wave.className = 'wave';
-                wave.style.animationDelay = `${i * 0.1}s`;
-                soundWaves.appendChild(wave);
-            }
-        }
-        
-        // تهيئة AudioContext لتحليل الصوت
-        function initAudioVisualizer() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 256;
-                source = audioContext.createMediaElementSource(audioPlayer);
-                source.connect(analyser);
-                analyser.connect(audioContext.destination);
-                
-                const bufferLength = analyser.frequencyBinCount;
-                dataArray = new Uint8Array(bufferLength);
-            }
-        }
-        
-        // تحديث المؤثرات البصرية بناءً على الصوت
-        function updateVisualizer() {
-            if (!analyser || !dataArray) return;
-            
-            analyser.getByteFrequencyData(dataArray);
-            const bars = document.querySelectorAll('.bar');
-            
-            bars.forEach((bar, i) => {
-                const barIndex = Math.floor((i / bars.length) * dataArray.length);
-                const value = dataArray[barIndex];
-                const height = Math.max(20, (value / 255) * 150);
-                
-                bar.style.height = `${height}px`;
-                
-                // تغيير اللون بناءً على شدة الصوت
-                if (value > 200) {
-                    bar.style.background = 'linear-gradient(to top, #ff416c, #ff4b2b)';
-                } else if (value > 150) {
-                    bar.style.background = 'linear-gradient(to top, #ff9966, #ff5e62)';
-                } else if (value > 100) {
-                    bar.style.background = 'linear-gradient(to top, #36d1dc, #5b86e5)';
-                } else {
-                    bar.style.background = 'linear-gradient(to top, #8a2be2, #4169e1)';
-                }
-            });
-        }
-        
-        // تشغيل المؤثرات البصرية
-        function startVisualizer() {
-            if (visualizerInterval) clearInterval(visualizerInterval);
-            
-            // إذا كان هناك صوت، قم بتهيئة وتحليل الصوت
-            if (currentContentType !== 'video' && audioPlayer.src) {
-                initAudioVisualizer();
-                visualizerInterval = setInterval(updateVisualizer, 100);
-            } else {
-                // تشغيل تأثيرات افتراضية
-                const bars = document.querySelectorAll('.bar');
-                visualizerInterval = setInterval(() => {
-                    bars.forEach(bar => {
-                        const randomHeight = 20 + Math.random() * 100;
-                        bar.style.height = `${randomHeight}px`;
-                    });
-                }, 300);
-            }
-            
-            // تشغيل موجات الصوت
-            const waves = document.querySelectorAll('.wave');
-            waves.forEach(wave => {
-                wave.style.animationPlayState = 'running';
-            });
-        }
-        
-        // إيقاف المؤثرات البصرية
-        function stopVisualizer() {
-            if (visualizerInterval) {
-                clearInterval(visualizerInterval);
-                visualizerInterval = null;
-            }
-            
-            // إيقاف موجات الصوت
-            const waves = document.querySelectorAll('.wave');
-            waves.forEach(wave => {
-                wave.style.animationPlayState = 'paused';
-            });
-            
-            // إعادة الأشرطة إلى الطول الافتراضي
-            const bars = document.querySelectorAll('.bar');
-            bars.forEach(bar => {
-                bar.style.height = '20px';
-                bar.style.background = 'linear-gradient(to top, #8a2be2, #4169e1)';
-            });
         }
         
         // إنشاء عناصر المحتوى بناءً على النوع
@@ -1242,12 +1455,12 @@
                     addMoreBtn.style.display = 'none';
                     break;
                 case 'music':
-                    items = itemsToShow || songs.slice(0, 20);
+                    items = itemsToShow || songs.slice(0, 20); // عرض 20 أغنية
                     contentTitle.textContent = `قائمة الأغاني (${songs.length})`;
                     addMoreBtn.style.display = 'flex';
                     break;
                 case 'video':
-                    items = itemsToShow || videos.slice(0, 20);
+                    items = itemsToShow || videos.slice(0, 20); // عرض 20 فيديو
                     contentTitle.textContent = `مقاطع الفيديو (${videos.length})`;
                     addMoreBtn.style.display = 'flex';
                     break;
@@ -1307,7 +1520,6 @@
                     item = radioStations.find(s => s.id === contentId);
                     artistName.textContent = item.name;
                     songTitle.textContent = 'بث مباشر';
-                    artistImage.src = item.image || 'https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
                     
                     // إعداد مشغل الراديو
                     setupRadioPlayer(item.url);
@@ -1317,7 +1529,6 @@
                     item = songs.find(s => s.id === contentId);
                     artistName.textContent = item.name;
                     songTitle.textContent = item.title;
-                    artistImage.src = item.image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
                     
                     // إعداد مشغل الأغاني
                     setupMusicPlayer(item.url, item.duration);
@@ -1328,8 +1539,11 @@
                     artistName.textContent = item.name;
                     songTitle.textContent = item.title;
                     
-                    // إعداد مشغل الفيديو (التشغيل التلقائي بمشغل خارجي)
-                    setupVideoPlayer(item);
+                    // إعداد واجهة الفيديو
+                    setupVideoInterface();
+                    
+                    // إعداد مشغل الفيديو
+                    setupVideoPlayer(item.url, item.duration);
                     break;
             }
             
@@ -1339,212 +1553,228 @@
             }, 1000);
         }
         
-        // إعداد مشغل الفيديو (التشغيل التلقائي بمشغل خارجي)
-        function setupVideoPlayer(item) {
-            // إخفاء صورة الفنان وإظهار زر مشاهدة الفيديو
-            artistImage.style.display = 'none';
+        // إعداد واجهة الفيديو
+        function setupVideoInterface() {
+            // إظهار الفيديو
             videoContainer.style.display = 'block';
-            videoContainer.innerHTML = '';
-            
-            // إضافة زر الرجوع للقائمة
-            videoBackBtn.style.display = 'flex';
             
             // إضافة حالة الفيديو النشط
             mediaArea.classList.add('video-active');
             
-            // إظهار زر مشاهدة الفيديو
-            watchVideoBtn.style.display = 'flex';
-            watchVideoBtn.onclick = function() {
-                openExternalVideoPlayer(item.url);
-            };
+            // إظهار زر الرجوع
+            backBtn.style.display = 'flex';
             
-            // إيقاف أي تشغيل سابق
-            stopAllPlayers();
-            
-            // إزالة أي وقت سابق
+            // إلغاء أي وقت تشغيل سابق
             if (fullscreenTimeout) {
                 clearTimeout(fullscreenTimeout);
-                fullscreenTimeout = null;
             }
             
-            // إخفاء زر الرجوع الرئيسي وإظهار زر الرجوع في الفيديو
+            // بعد 5 ثواني، قم بتشغيل ملء الشاشة
+            fullscreenTimeout = setTimeout(() => {
+                enterFullscreenMode();
+            }, 5000);
+        }
+        
+        // تشغيل وضع ملء الشاشة
+        function enterFullscreenMode() {
+            if (isFullscreen) return;
+            
+            isFullscreen = true;
+            mediaArea.classList.add('fullscreen-mode');
+            exitFullscreenBtn.style.display = 'flex';
+            
+            // إخفاء زر الرجوع في وضع ملء الشاشة
             backBtn.style.display = 'none';
             
-            // تشغيل الفيديو تلقائياً بعد 2 ثانية
+            // إظهار مؤشر ملء الشاشة
+            fullscreenIndicator.style.display = 'block';
             setTimeout(() => {
-                if (!item.external) {
-                    // إذا كان الفيديو داخلياً
-                    showVideoLoading(true);
-                    setTimeout(() => {
-                        showVideoLoading(false);
-                        playInternalVideo(item.url);
-                    }, 2000);
-                } else {
-                    // إذا كان الفيديو خارجياً، افتح المشغل الخارجي تلقائياً
-                    openExternalVideoPlayer(item.url);
-                }
+                fullscreenIndicator.style.display = 'none';
             }, 2000);
+            
+            // إخفاء رأس التطبيق وعناصر التحكم
+            document.querySelector('.app-header').style.display = 'none';
+            
+            // محاولة تشغيل وضع ملء الشاشة الأصلي
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen();
+            } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.msRequestFullscreen) { /* IE11 */
+                videoContainer.msRequestFullscreen();
+            }
         }
         
-        // فتح مشغل فيديو خارجي
-        function openExternalVideoPlayer(videoUrl) {
-            showVideoLoading(true);
+        // الخروج من وضع ملء الشاشة
+        function exitFullscreenMode() {
+            if (!isFullscreen) return;
             
-            // محاولة فتح في نافذة جديدة أولاً
-            setTimeout(() => {
-                const newWindow = window.open(videoUrl, '_blank', 'noopener,noreferrer');
-                
-                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                    // إذا فشل فتح نافذة جديدة، حاول استخدام iframe
-                    playVideoInIframe(videoUrl);
-                } else {
-                    // إخفاء تحميل الفيديو بعد فتح النافذة
-                    setTimeout(() => {
-                        showVideoLoading(false);
-                        // عرض رسالة للمستخدم
-                        alert('تم فتح الفيديو في مشغل خارجي. يمكنك العودة للتطبيق بعد المشاهدة.');
-                    }, 1500);
-                }
-            }, 1000);
+            isFullscreen = false;
+            mediaArea.classList.remove('fullscreen-mode');
+            exitFullscreenBtn.style.display = 'none';
+            
+            // إظهار زر الرجوع بعد الخروج من ملء الشاشة
+            if (currentContentType === 'video') {
+                backBtn.style.display = 'flex';
+            }
+            
+            // إظهار رأس التطبيق
+            document.querySelector('.app-header').style.display = 'flex';
+            
+            // الخروج من وضع ملء الشاشة الأصلي
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
         }
         
-        // تشغيل الفيديو في iframe
-        function playVideoInIframe(videoUrl) {
-            showVideoLoading(true);
-            
-            // تنظيف الـ container
-            videoContainer.innerHTML = '';
-            
-            // إضافة زر الرجوع
-            videoContainer.appendChild(videoBackBtn);
-            
-            // إنشاء iframe
-            const iframe = document.createElement('iframe');
-            iframe.src = videoUrl;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-            iframe.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
-            iframe.allowFullscreen = true;
-            
-            // إضافة iframe إلى container
-            videoContainer.appendChild(iframe);
-            
-            // إخفاء زر مشاهدة الفيديو
-            watchVideoBtn.style.display = 'none';
-            
-            // إخفاء تحميل الفيديو بعد تحميل iframe
-            iframe.onload = function() {
-                showVideoLoading(false);
-                // محاولة تشغيل الفيديو تلقائياً
-                try {
-                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                } catch (e) {
-                    console.log('لا يمكن تشغيل الفيديو تلقائياً:', e);
-                }
-            };
-        }
-        
-        // تشغيل الفيديو داخلياً (إذا كان مدعوماً)
-        function playInternalVideo(videoUrl) {
-            // تنظيف الـ container
-            videoContainer.innerHTML = '';
-            
-            // إضافة زر الرجوع
-            videoContainer.appendChild(videoBackBtn);
-            
-            // إنشاء عنصر فيديو
-            const video = document.createElement('video');
-            video.src = videoUrl;
-            video.style.width = '100%';
-            video.style.height = '100%';
-            video.controls = true;
-            video.autoplay = true;
-            video.playsInline = true;
-            
-            // إضافة الفيديو إلى container
-            videoContainer.appendChild(video);
-            
-            // إخفاء زر مشاهدة الفيديو
-            watchVideoBtn.style.display = 'none';
-            
-            // إضافة حدث للرجوع عند انتهاء الفيديو
-            video.onended = function() {
-                setTimeout(() => {
-                    goBackToHome();
-                }, 2000);
-            };
-        }
-        
-        // إظهار/إخفاء تحميل الفيديو
-        function showVideoLoading(show) {
-            if (show) {
-                videoLoading.style.display = 'block';
+        // تبديل وضع ملء الشاشة
+        function toggleFullscreen() {
+            if (isFullscreen) {
+                exitFullscreenMode();
             } else {
-                videoLoading.style.display = 'none';
+                enterFullscreenMode();
             }
         }
         
         // العودة إلى الصفحة الرئيسية
         function goBackToHome() {
+            if (currentContentType === 'video') {
+                // إيقاف الفيديو
+                stopAllPlayers();
+                
+                // إزالة حالة الفيديو النشط
+                mediaArea.classList.remove('video-active');
+                mediaArea.classList.remove('fullscreen-mode');
+                exitFullscreenBtn.style.display = 'none';
+                
+                // إخفاء الفيديو
+                videoContainer.style.display = 'none';
+                
+                // إخفاء زر الرجوع
+                backBtn.style.display = 'none';
+                
+                // إلغاء وقت ملء الشاشة
+                if (fullscreenTimeout) {
+                    clearTimeout(fullscreenTimeout);
+                    fullscreenTimeout = null;
+                }
+                
+                // إعادة تعيين المحتوى
+                artistName.textContent = "أحلام";
+                songTitle.textContent = "أغنية مختارة";
+                
+                // إعادة تشغيل العناصر المخفية
+                document.querySelectorAll('.progress-area, .controls, .content-type-selector, .content-bar').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.height = 'auto';
+                    el.style.padding = '';
+                    el.style.margin = '';
+                });
+                
+                // إعادة تعيين التشغيل
+                isPlaying = false;
+                playIcon.className = 'fas fa-play';
+            }
+        }
+        
+        // إضافة المزيد من العناصر
+        function addMoreItems() {
+            let items = [];
+            let startIndex = 0;
+            
+            switch(currentContentType) {
+                case 'music':
+                    const currentMusicCount = document.querySelectorAll('.content-item').length;
+                    if (currentMusicCount < songs.length) {
+                        startIndex = currentMusicCount;
+                        items = songs.slice(startIndex, startIndex + 10);
+                        createContentItems('music', [...songs.slice(0, startIndex), ...items]);
+                    } else {
+                        alert('تم عرض جميع الأغاني المتاحة');
+                    }
+                    break;
+                    
+                case 'video':
+                    const currentVideoCount = document.querySelectorAll('.content-item').length;
+                    if (currentVideoCount < videos.length) {
+                        startIndex = currentVideoCount;
+                        items = videos.slice(startIndex, startIndex + 10);
+                        createContentItems('video', [...videos.slice(0, startIndex), ...items]);
+                    } else {
+                        alert('تم عرض جميع الفيديوهات المتاحة');
+                    }
+                    break;
+            }
+        }
+        
+        // إضافة أغنية جديدة
+        function addNewSong(name, title, image, url, duration = 180) {
+            const newId = songs.length > 0 ? Math.max(...songs.map(s => s.id)) + 1 : 1;
+            const newSong = {
+                id: newId,
+                name: name,
+                title: title,
+                icon: "fas fa-music",
+                image: image,
+                url: url,
+                duration: duration
+            };
+            songs.push(newSong);
+            createContentItems('music');
+            return newId;
+        }
+        
+        // إضافة فيديو جديد
+        function addNewVideo(name, title, image, url, duration = 180) {
+            const newId = videos.length > 0 ? Math.max(...videos.map(v => v.id)) + 1 : 1;
+            const newVideo = {
+                id: newId,
+                name: name,
+                title: title,
+                icon: "fas fa-video",
+                image: image,
+                url: url,
+                duration: duration
+            };
+            videos.push(newVideo);
+            createContentItems('video');
+            return newId;
+        }
+        
+        // إظهار/إخفاء مؤشر التحميل
+        function showLoadingIndicator(contentId, contentType, show) {
+            const items = document.querySelectorAll('.content-item');
+            items.forEach(item => {
+                if (parseInt(item.dataset.id) === contentId && item.dataset.type === contentType) {
+                    const loading = item.querySelector('.audio-loading');
+                    if (loading) {
+                        loading.style.display = show ? 'block' : 'none';
+                    }
+                }
+            });
+        }
+        
+        // إعداد مشغل الراديو
+        function setupRadioPlayer(url) {
             // إيقاف أي تشغيل سابق
             stopAllPlayers();
-            
-            // إعادة إظهار صورة الفنان
-            artistImage.style.display = 'block';
-            videoContainer.style.display = 'none';
-            videoContainer.innerHTML = '';
-            watchVideoBtn.style.display = 'none';
-            videoBackBtn.style.display = 'none';
-            showVideoLoading(false);
             
             // إزالة حالة الفيديو النشط
             mediaArea.classList.remove('video-active');
             mediaArea.classList.remove('fullscreen-mode');
             exitFullscreenBtn.style.display = 'none';
             
-            // إعادة إظهار العناصر المخفية
-            document.querySelectorAll('.progress-area, .controls, .content-type-selector, .content-bar').forEach(el => {
-                el.style.opacity = '1';
-                el.style.height = 'auto';
-                el.style.padding = '';
-                el.style.margin = '';
-            });
+            // إخفاء الفيديو
+            videoContainer.style.display = 'none';
             
-            // إعادة تعيين المحتوى
-            artistName.textContent = "أحلام";
-            songTitle.textContent = "أغنية مختارة";
-            artistImage.src = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80";
-            
-            // إعادة تعيين التشغيل
-            isPlaying = false;
-            playIcon.className = 'fas fa-play';
+            // إخفاء زر الرجوع
+            backBtn.style.display = 'none';
             
             // إلغاء وقت ملء الشاشة
-            if (fullscreenTimeout) {
-                clearTimeout(fullscreenTimeout);
-                fullscreenTimeout = null;
-            }
-            
-            // إخفاء زر الرجوع
-            backBtn.style.display = 'none';
-        }
-        
-        // إعداد مشغل الراديو
-        function setupRadioPlayer(url) {
-            stopAllPlayers();
-            
-            // إزالة حالة الفيديو النشط
-            mediaArea.classList.remove('video-active');
-            exitFullscreenBtn.style.display = 'none';
-            artistImage.style.display = 'block';
-            videoContainer.style.display = 'none';
-            watchVideoBtn.style.display = 'none';
-            videoBackBtn.style.display = 'none';
-            
-            // إخفاء زر الرجوع
-            backBtn.style.display = 'none';
-            
             if (fullscreenTimeout) {
                 clearTimeout(fullscreenTimeout);
                 fullscreenTimeout = null;
@@ -1554,6 +1784,7 @@
                 audioPlayer.src = url;
                 audioPlayer.load();
                 
+                // محاولة تشغيل الصوت
                 audioPlayer.play().then(() => {
                     isPlaying = true;
                     playIcon.className = 'fas fa-pause';
@@ -1565,6 +1796,7 @@
                 });
             }
             
+            // إعداد الوقت للراديو (مباشر)
             currentTime = 0;
             duration = 0;
             updateTimeDisplay();
@@ -1582,17 +1814,21 @@
         
         // إعداد مشغل الأغاني
         function setupMusicPlayer(url, songDuration) {
+            // إيقاف أي تشغيل سابق
             stopAllPlayers();
             
+            // إزالة حالة الفيديو النشط
             mediaArea.classList.remove('video-active');
+            mediaArea.classList.remove('fullscreen-mode');
             exitFullscreenBtn.style.display = 'none';
-            artistImage.style.display = 'block';
-            videoContainer.style.display = 'none';
-            watchVideoBtn.style.display = 'none';
-            videoBackBtn.style.display = 'none';
             
+            // إخفاء الفيديو
+            videoContainer.style.display = 'none';
+            
+            // إخفاء زر الرجوع
             backBtn.style.display = 'none';
             
+            // إلغاء وقت ملء الشاشة
             if (fullscreenTimeout) {
                 clearTimeout(fullscreenTimeout);
                 fullscreenTimeout = null;
@@ -1607,6 +1843,7 @@
                     updateTimeDisplay();
                 });
                 
+                // تشغيل الصوت مباشرة
                 audioPlayer.play().then(() => {
                     isPlaying = true;
                     playIcon.className = 'fas fa-pause';
@@ -1620,6 +1857,7 @@
                 currentTime = 0;
                 updateTimeDisplay();
                 
+                // محاكاة التشغيل
                 isPlaying = true;
                 playIcon.className = 'fas fa-pause';
                 startVisualizer();
@@ -1627,21 +1865,107 @@
             }
         }
         
+        // إعداد مشغل الفيديو - محسن للعمل على Android
+        function setupVideoPlayer(url, videoDuration) {
+            // إيقاف أي تشغيل سابق
+            stopAllPlayers();
+            
+            // تعيين السمات المهمة للعمل على Android
+            videoPlayer.setAttribute('playsinline', '');
+            videoPlayer.setAttribute('webkit-playsinline', '');
+            videoPlayer.setAttribute('controls', 'false');
+            
+            if (url && url.trim() !== '') {
+                videoPlayer.src = url;
+                videoPlayer.load();
+                
+                // تشغيل الفيديو مباشرة
+                videoPlayer.play().then(() => {
+                    isPlaying = true;
+                    playIcon.className = 'fas fa-pause';
+                    startVisualizer();
+                    startProgressForVideo();
+                }).catch(error => {
+                    console.log("خطأ في تشغيل الفيديو:", error);
+                    
+                    // إذا فشل التشغيل التلقائي، استخدم المدة الافتراضية
+                    duration = videoDuration || 180;
+                    currentTime = 0;
+                    updateTimeDisplay();
+                    
+                    // محاكاة التشغيل للفيديو
+                    isPlaying = true;
+                    playIcon.className = 'fas fa-pause';
+                    startVisualizer();
+                    startProgress();
+                });
+            } else {
+                // إذا لم يكن هناك رابط فيديو، استخدم المدة الافتراضية
+                duration = videoDuration || 180;
+                currentTime = 0;
+                updateTimeDisplay();
+                
+                // محاكاة التشغيل للفيديو
+                isPlaying = true;
+                playIcon.className = 'fas fa-pause';
+                startVisualizer();
+                startProgress();
+            }
+            
+            // إضافة مستمعي الأحداث للتحكم في الفيديو
+            videoPlayer.addEventListener('click', toggleVideoPlayPause);
+            videoPlayPauseBtn.addEventListener('click', toggleVideoPlayPause);
+            videoFullscreenBtn.addEventListener('click', toggleFullscreen);
+            
+            // تحديث زر التشغيل/الإيقاف للفيديو
+            videoPlayer.addEventListener('play', () => {
+                videoPlayPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                isPlaying = true;
+                playIcon.className = 'fas fa-pause';
+            });
+            
+            videoPlayer.addEventListener('pause', () => {
+                videoPlayPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                isPlaying = false;
+                playIcon.className = 'fas fa-play';
+            });
+            
+            // إضافة مستمع للوضع الكامل
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+        }
+        
+        // التعامل مع تغيير وضع ملء الشاشة
+        function handleFullscreenChange() {
+            const isFullscreenNow = !!(document.fullscreenElement || 
+                                     document.webkitFullscreenElement || 
+                                     document.mozFullScreenElement || 
+                                     document.msFullscreenElement);
+            
+            if (!isFullscreenNow && isFullscreen) {
+                exitFullscreenMode();
+            }
+        }
+        
+        // تبديل تشغيل/إيقاف الفيديو
+        function toggleVideoPlayPause(e) {
+            e.stopPropagation(); // منع انتشار الحدث
+            
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        }
+        
         // إيقاف جميع المشغلات
         function stopAllPlayers() {
             clearInterval(progressInterval);
             audioPlayer.pause();
+            videoPlayer.pause();
             stopVisualizer();
-            
-            // إغلاق AudioContext إذا كان مفتوحاً
-            if (audioContext && audioContext.state !== 'closed') {
-                audioContext.close().then(() => {
-                    audioContext = null;
-                    analyser = null;
-                    dataArray = null;
-                    source = null;
-                });
-            }
         }
         
         // بدء التقدم للراديو
@@ -1679,6 +2003,31 @@
             }, 1000);
         }
         
+        // بدء التقدم للفيديو
+        function startProgressForVideo() {
+            clearInterval(progressInterval);
+            
+            progressInterval = setInterval(() => {
+                if (videoPlayer.ended) {
+                    clearInterval(progressInterval);
+                    isPlaying = false;
+                    playIcon.className = 'fas fa-play';
+                    stopVisualizer();
+                    
+                    // العودة إلى الصفحة الرئيسية عند انتهاء الفيديو
+                    goBackToHome();
+                    return;
+                }
+                
+                currentTime = videoPlayer.currentTime;
+                duration = videoPlayer.duration || duration;
+                updateTimeDisplay();
+                
+                const progressPercent = (currentTime / duration) * 100;
+                progress.style.width = `${progressPercent}%`;
+            }, 100);
+        }
+        
         // تحديث عرض الوقت للراديو
         function updateTimeDisplayForRadio() {
             currentTimeElement.textContent = formatTime(currentTime);
@@ -1713,6 +2062,7 @@
                 playIcon.className = 'fas fa-pause';
                 startVisualizer();
                 
+                // تشغيل حسب نوع المحتوى
                 switch(currentContentType) {
                     case 'radio':
                         audioPlayer.play().catch(e => console.log("خطأ في تشغيل الراديو:", e));
@@ -1722,11 +2072,16 @@
                         audioPlayer.play().catch(e => console.log("خطأ في تشغيل الأغنية:", e));
                         startProgress();
                         break;
+                    case 'video':
+                        videoPlayer.play().catch(e => console.log("خطأ في تشغيل الفيديو:", e));
+                        startProgressForVideo();
+                        break;
                 }
             } else {
                 playIcon.className = 'fas fa-play';
                 stopVisualizer();
                 
+                // إيقاف حسب نوع المحتوى
                 switch(currentContentType) {
                     case 'radio':
                         audioPlayer.pause();
@@ -1734,55 +2089,100 @@
                     case 'music':
                         audioPlayer.pause();
                         break;
+                    case 'video':
+                        videoPlayer.pause();
+                        break;
                 }
                 
                 clearInterval(progressInterval);
             }
         }
         
+        // بدء المؤثرات الصوتية
+        function startVisualizer() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                bar.style.animationPlayState = 'running';
+            });
+        }
+        
+        // إيقاف المؤثرات الصوتية
+        function stopVisualizer() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                bar.style.animationPlayState = 'paused';
+            });
+        }
+        
         // تغيير نوع المحتوى
         function changeContentType(type) {
+            // إذا كنا في وضع الفيديو، أخرج منه
             if (currentContentType === 'video' && type !== 'video') {
                 goBackToHome();
             }
             
             currentContentType = type;
             
+            // تحديث أزرار النوع
             radioTypeBtn.classList.toggle('active', type === 'radio');
             musicTypeBtn.classList.toggle('active', type === 'music');
             videoTypeBtn.classList.toggle('active', type === 'video');
             
+            // إعادة تعيين المحتوى النشط
             currentContentId = 1;
             
+            // إنشاء عناصر جديدة
             createContentItems(type);
+            
+            // تحديد العنصر الأول وتشغيله
             selectContent(1, type);
         }
         
-        // إظهار/إخفاء مؤشر التحميل
-        function showLoadingIndicator(contentId, contentType, show) {
-            const items = document.querySelectorAll('.content-item');
-            items.forEach(item => {
-                if (parseInt(item.dataset.id) === contentId && item.dataset.type === contentType) {
-                    const loading = item.querySelector('.audio-loading');
-                    if (loading) {
-                        loading.style.display = show ? 'block' : 'none';
-                    }
+        // التعامل مع تغيير شريط التقدم
+        function handleProgressBarClick(e) {
+            const rect = progressBar.getBoundingClientRect();
+            const clickPosition = e.clientX - rect.left;
+            const width = rect.width;
+            const percent = clickPosition / width;
+            
+            // تحديث حسب نوع المحتوى
+            if (currentContentType === 'video') {
+                if (videoPlayer.duration) {
+                    videoPlayer.currentTime = percent * videoPlayer.duration;
+                    currentTime = videoPlayer.currentTime;
                 }
-            });
+            } else if (duration > 0) {
+                currentTime = percent * duration;
+                if (currentContentType === 'music') {
+                    audioPlayer.currentTime = currentTime;
+                }
+            }
+            
+            // تحديث العرض
+            const progressPercent = percent * 100;
+            progress.style.width = `${progressPercent}%`;
+            updateTimeDisplay();
         }
         
         // تهيئة التطبيق
         function initApp() {
-            createVisualizer();
+            createVisualizerBars();
             createContentItems('radio');
             selectContent(1, 'radio');
             
+            // تعيين الوقت الافتراضي
             updateTimeDisplay();
             
             // إضافة مستمعي الأحداث
+            settingsBtn.addEventListener('click', () => {
+                settingsOverlay.style.display = 'flex';
+            });
+            
             backBtn.addEventListener('click', goBackToHome);
             
-            videoBackBtn.addEventListener('click', goBackToHome);
+            closeSettings.addEventListener('click', () => {
+                settingsOverlay.style.display = 'none';
+            });
             
             playPauseBtn.addEventListener('click', togglePlayPause);
             
@@ -1817,10 +2217,52 @@
             musicTypeBtn.addEventListener('click', () => changeContentType('music'));
             videoTypeBtn.addEventListener('click', () => changeContentType('video'));
             
-            // منع التكبير بالنقر المزدوج
-            document.addEventListener('dblclick', function(e) {
-                e.preventDefault();
-            }, { passive: false });
+            // زر إضافة المزيد
+            addMoreBtn.addEventListener('click', addMoreItems);
+            
+            // زر الخروج من ملء الشاشة
+            exitFullscreenBtn.addEventListener('click', exitFullscreenMode);
+            
+            // أزرار تغيير الوضع (من الإعدادات)
+            musicModeBtn.addEventListener('click', () => changeMode('music'));
+            radioModeBtn.addEventListener('click', () => changeMode('radio'));
+            videoModeBtn.addEventListener('click', () => changeMode('video'));
+            
+            // التحكم في شريط التقدم
+            progressBar.addEventListener('click', handleProgressBarClick);
+            
+            // التحكم في مستوى الصوت
+            const volumeSlider = document.getElementById('volumeSlider');
+            volumeSlider.addEventListener('input', function() {
+                const volume = this.value / 100;
+                audioPlayer.volume = volume;
+                videoPlayer.volume = volume;
+            });
+            
+            // إغلاق الإعدادات بالنقر خارجها
+            settingsOverlay.addEventListener('click', (e) => {
+                if (e.target === settingsOverlay) {
+                    settingsOverlay.style.display = 'none';
+                }
+            });
+            
+            // التحكم في سطوع الشاشة
+            const brightnessSlider = document.getElementById('brightnessSlider');
+            brightnessSlider.addEventListener('input', function() {
+                const brightness = this.value / 100;
+                document.body.style.filter = `brightness(${brightness})`;
+            });
+        }
+        
+        // تغيير الوضع (من الإعدادات)
+        function changeMode(mode) {
+            // تحديث أزرار الوضع
+            musicModeBtn.classList.toggle('active', mode === 'music');
+            radioModeBtn.classList.toggle('active', mode === 'radio');
+            videoModeBtn.classList.toggle('active', mode === 'video');
+            
+            // تغيير نوع المحتوى بناءً على الوضع
+            changeContentType(mode);
         }
         
         // تشغيل التطبيق عند تحميل الصفحة
